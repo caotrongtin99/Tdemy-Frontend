@@ -1,0 +1,9 @@
+@import '~antd/dist/antd.css';
+
+/* .ant-layout {
+    background-color: #ffffff;
+} */ 
+
+.App {
+    background-color: #f0f2f5;
+}
