@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import _ from 'lodash';
 import { history } from "../_helpers/history";
 import { Layout, Menu, Row, Col, Input, Button, Icon, Popover } from 'antd';
 import ReactModalLogin from "react-modal-login";
@@ -59,6 +60,13 @@ class Navbar extends Component {
         });
     }
 
+    onClickSignUp = () => {
+        history.push('/register');
+    }
+
+    onClickLogin = () => {
+        history.push('/login');
+    }
     render() {
         const content = (
             <div>
@@ -68,9 +76,10 @@ class Navbar extends Component {
         );
         return (
             <Header className="header" style={{ backgroundColor: '#fff' }}>
-                <Row type="flex" style={{ alignItems: 'center' }}>
+                <Row type="flex" style={{ alignItems: 'center'}}>
                     <Col span={16}>
-                        <Row type="flex" style={{ alignItems: "center", justifyContent: "start"}}>
+                        {
+                            _.get(this.props, 'user.role') === "student" && <Row type="flex" style={{ alignItems: "center", justifyContent: "start"}}>
                             <img src={logo} style={{ height: '40px' }} alt="" />
                             <Col span={4} style={{ marginLeft: '-100px' }}>
                                 <Menu
@@ -109,16 +118,18 @@ class Navbar extends Component {
                                     <Search placeholder="Search for anything" onSearch={value => console.log(value)} enterButton />
                             </Col>
                         </Row>
+                        }
+                        
                     </Col>
                         <Col span={8}>
                             <Row type="flex" justify="end" style={{ alignItems: "center" }}>
                                 <Popover content={content} title="Cart">
                                     <Button><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Button>
                                 </Popover>,
-                            <Button style={{ marginRight: '10px', marginLeft: '20px' }} type="primary" shape="round" icon="user" size="large">
+                            <Button style={{ marginRight: '10px', marginLeft: '20px' }} type="primary" shape="round" icon="user" size="large" onClick={this.onClickLogin}>
                                     Login
                             </Button>
-                                <Button type="danger" shape="round" icon="user-add" size="large">
+                                <Button type="danger" shape="round" icon="user-add" size="large" onClick={this.onClickSignUp}>
                                     Sign Up
                             </Button>
                             </Row>
