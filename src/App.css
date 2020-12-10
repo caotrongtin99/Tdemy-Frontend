@@ -7,3 +7,25 @@
 .App {
     background-color: #f0f2f5;
 }
+
+.main-content-teacher {
+    margin-right: 64px;
+}
+
+.main-content-teacher-course{
+    font-size: 14px;
+}
+
+.side-nav-teacher {
+    padding-top: 64px;
+}
+
+.course-list .course{
+    transition: box-shadow .3s;
+    border: 1px solid #ccc;
+
+}
+
+.course-list .course:hover {
+    box-shadow: 7px 7px 11px rgba(33,33,33,.2); 
+  }

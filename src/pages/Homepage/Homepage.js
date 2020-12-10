@@ -5,11 +5,11 @@ import LearnSkill from '../../static/images/LearnSkill.png';
 import Career from '../../static/images/Carreer.png';
 import Certificate from '../../static/images/certificate.png';
 import Organization from '../../static/images/organization.png';
-import HotCourses from '../../Components/HotCourses';
+import HotCourses from '../../components/HotCourses';
+import { toInteger } from 'lodash';
 
 
 class HomePage extends Component {
-
 
     render() {
         return (
