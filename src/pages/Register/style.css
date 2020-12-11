@@ -14,13 +14,23 @@ body {
     left: 0;
     right: 0; */
   }
+
+  #components-form-demo-normal-login .login-form {
+    max-width: 300px;
+  }
+  #components-form-demo-normal-login .login-form-forgot {
+    float: right;
+  }
+  #components-form-demo-normal-login .login-form-button {
+    width: 100%;
+  }
   
   .form-container {
     /* bottom: 100px; */
   }
 
   .login-form {
-    padding: 50px 0 50px 0;
+    padding: 50px 200px 50px 200px;
     background-color: white;
     border-radius: 2%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

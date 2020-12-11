@@ -6,7 +6,7 @@ import Career from '../../static/images/Carreer.png';
 import Certificate from '../../static/images/certificate.png';
 import Organization from '../../static/images/organization.png';
 import HotCourses from '../../components/HotCourses';
-import { toInteger } from 'lodash';
+// import HotCourses from '../../components/HotCourses';
 
 
 class HomePage extends Component {
@@ -72,7 +72,7 @@ class HomePage extends Component {
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>What to learn next</h2>
                     <Row style={{ paddingBottom: '100px'}}>
-                    <HotCourses/>
+                        <HotCourses/>
                     </Row>
                     </Col>
                 </Row>
