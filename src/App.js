@@ -6,6 +6,7 @@ import Navbar from './Components/Navbar'
 import { Layout, BackTop } from 'antd';
 import RegisterPage from './pages/Register/RegisterPage';
 import HomePage from './pages/Homepage/Homepage';
+import AccountPage from './pages/Account/Account';
 
 class App extends React.Component {
   render() {
@@ -19,6 +20,7 @@ class App extends React.Component {
             <Switch>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/register' component={RegisterPage} />
+              <Route exact path='/account' component={AccountPage}></Route>
             </Switch>
           </Layout>
         </div>
