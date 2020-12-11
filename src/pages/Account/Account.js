@@ -4,7 +4,7 @@ import Career from '../../static/images/Carreer.png';
 import InfoForm from './components/InfoForm';
 import './style.css';
 
-import HotCourses from '../../Components/HotCourses';
+import HotCourses from '../../components/HotCourses';
 
 
 class Account extends React.Component {
