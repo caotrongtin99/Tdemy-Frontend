@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import { Layout, BackTop, Icon } from 'antd';
 import RegisterPage from './pages/Register/RegisterPage';
 import HomePage from './pages/Homepage/Homepage';
+import AccountPage from './pages/Account/Account';
 
 import TeacherDashboard from './pages/TeacherDashboard/TeacherDashboard';
 import { history } from './_helpers/history';
@@ -31,6 +32,7 @@ class App extends React.Component {
             <Switch>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/register' component={RegisterPage} />
+              <Route exact path='/account' component={AccountPage}></Route>
               <Route exact path='/teacher' component={TeacherDashboard}/>
               <Route exact path='/teacher/course' component={TeacherCourse}/>
               <Route exact path='/teacher/course/create' component={CreateCourse}/>
