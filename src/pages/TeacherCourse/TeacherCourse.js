@@ -17,6 +17,10 @@ class TeacherCourse extends Component {
             searchKeyword: e.target.value
         })
     }
+
+    handleClickCourseDetail =(id) => {
+        history.push(`/teacher/course/manage/${id}`)
+    }
     render() {
         const courses = [
             {
@@ -69,7 +73,7 @@ class TeacherCourse extends Component {
                                 <Button type="danger">New Course</Button>
                             </Row>
                             <div className="course-list" style={{ marginTop: '25px' }}>
-                                {courses.map(course => <Row type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
+                                {courses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
                                     <img src={course.avatar} height={118} />
                                     <div style={{ padding: '10px 0px 10px 20px' }}>
                                         <h2>{course.name}</h2>

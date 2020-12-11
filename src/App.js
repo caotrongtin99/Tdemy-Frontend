@@ -11,6 +11,8 @@ import TeacherDashboard from './pages/TeacherDashboard/TeacherDashboard';
 import { history } from './_helpers/history';
 import TeacherCourse from './pages/TeacherCourse/TeacherCourse';
 import CreateCourse from './pages/CreateCourse/CreateCourse';
+import TeacherCourseDetail from './pages/TeacherCourseDetail';
+import LoginPage from './pages/Login';
 class App extends React.Component {
   componentWillMount() {
     localStorage.setItem("user", JSON.stringify({
@@ -31,9 +33,11 @@ class App extends React.Component {
             <Switch>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/register' component={RegisterPage} />
+              <Route exact path='/login' component={LoginPage} />
               <Route exact path='/teacher' component={TeacherDashboard}/>
               <Route exact path='/teacher/course' component={TeacherCourse}/>
               <Route exact path='/teacher/course/create' component={CreateCourse}/>
+              <Route exact path='/teacher/course/manage/:id' component={TeacherCourseDetail}/>
             </Switch>
           </Layout>
         </div>
