@@ -26,6 +26,7 @@ export const userActions = {
 
 function logout() {
   userService.logout();
+  debugger
   return (dispatch) => {
     dispatch({ type: userConstants.LOGOUT });
   };
@@ -103,14 +104,13 @@ function sendforgotPasswordEmail(email) {
   };
 }
 
-function login(email, password) {
+function login(email, password, accessToken, refreshToken) {
   return (dispatch) => {
-    dispatch(request({ email }));
+    dispatch(request({ email, password, accessToken, refreshToken }));
 
-    userService.login(email, password).then(
-      (user) => {
-        dispatch(success(user.token));
-        dispatch({ type: userConstants.GETUSER_SUCCESS, user });
+    userService.login(email, password, accessToken, refreshToken).then(
+      (token) => {
+        dispatch(success(token));
         history.push("/");
       },
       (error) => {
@@ -133,6 +133,7 @@ function login(email, password) {
 
 function register(user) {
   return (dispatch) => {
+    debugger
     dispatch(request(user));
 
     userService.register(user).then(

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Divider, Avatar, Layout, Button } from 'antd';
+import { Row, Col, Divider, Avatar, Layout, Button, Upload } from 'antd';
 import Career from '../../static/images/Carreer.png';
 import InfoForm from './components/InfoForm';
 import './style.css';
@@ -18,8 +18,7 @@ class Account extends React.Component {
             <div className='account'>
                 <Row style={{ paddingTop: '20px', paddingBottom: '0px', paddingLeft: '200px', paddingRight: '200px' }}>
                     <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                        <Avatar size={160} src={Career}></Avatar>
-                        <Button>Upload</Button>
+                        <Upload><Avatar size={140} src={Career}></Avatar></Upload>
                         <span className="goal" style={{ fontSize: '50px' }}>Ben Dover</span>
                         <Divider></Divider>
                     </div>

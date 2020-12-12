@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-
+import { connect } from "react-redux";
 import FormField from './FormField';
 import EmailField from './EmailField';
 import PasswordField from './PasswordField';
 import ConfirmPasswordField from './ConfirmPasswordField';
 import { Button, Row } from 'antd';
+import userActions from '../../../actions/userActions';
 
 class JoinForm extends Component {
 
@@ -16,6 +17,10 @@ class JoinForm extends Component {
     fullnameChanged = this.fieldStateChanged('fullname');
     passwordChanged = this.fieldStateChanged('password');
 
+    handleSubmit = () => {
+        const {fullname, email, password} = this.state;
+        debugger
+    }
     render() {
 		const { fullname, email, password } = this.state;
 		const formValidated = fullname && email && password;
@@ -37,7 +42,7 @@ class JoinForm extends Component {
 
                         <ConfirmPasswordField fieldId="confirmPassword" label="Confirm Password" placeholder="Enter Confirm Password" onStateChanged={this.passwordChanged} thresholdLength={7} minStrength={3} required />
                         <Row type='flex' justify="center" style={{ marginTop: '20px'}}>
-                        <Button type="primary" ghost>Submit</Button>
+                        <Button type="primary" ghost onClick={this.handleSubmit}>Submit</Button>
                         </Row>
                     </div>
 
@@ -48,4 +53,10 @@ class JoinForm extends Component {
 
 }
 
-export default JoinForm;
+const mapStateToProps = state => ({
+    registering: state.registration.registering,
+    alert: state.alert
+  });
+
+const connectedRegisterPage = connect(mapStateToProps)(JoinForm);
+export { connectedRegisterPage as default };
