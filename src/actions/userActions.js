@@ -10,18 +10,12 @@ export const userActions = {
   register,
   sendVerificationEmail,
   getUserData,
-  getUserProfileFollowers,
-  getUserProfileFollowings,
-  getFollowers,
-  getPosts,
-  getUserPosts,
-  getFollowings,
   updateUserData,
-  followUser,
   sendforgotPasswordEmail,
   getUserProfileData,
   getNewUsers,
   resetPassword,
+  saveUserData
 };
 
 function logout() {
@@ -106,14 +100,16 @@ function sendforgotPasswordEmail(email) {
 
 function login(email, password, accessToken, refreshToken) {
   return (dispatch) => {
-    dispatch(request({ email, password, accessToken, refreshToken }));
-
-    userService.login(email, password, accessToken, refreshToken).then(
-      (token) => {
-        dispatch(success(token));
+    dispatch(request({ email, password }));
+    debugger
+    userService.login(email, password).then(
+      (data) => {
+        dispatch(userActions.saveUserData(data))
+        dispatch(success(data))
         history.push("/");
       },
       (error) => {
+        debugger 
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
       }
@@ -190,43 +186,9 @@ function getUserData(queryParams) {
   }
 }
 
-function getPosts(queryParams) {
+function saveUserData(user) {
   return (dispatch) => {
-    userService.getPosts(queryParams).then(
-      (res) => {
-        res.posts.forEach((post) =>
-          dispatch({ type: postConstants.INIT_COMMENT, postId: post._id })
-        );
-        dispatch(success(res.posts));
-      },
-      (error) => {
-        dispatch(alertActions.error(error));
-      }
-    );
-  };
-
-  function success(posts) {
-    return { type: userConstants.GET_POSTS, posts };
-  }
-}
-
-function getUserPosts(queryParams) {
-  return (dispatch) => {
-    userService.getPosts(queryParams).then(
-      (res) => {
-        res.posts.forEach((post) =>
-          dispatch({ type: postConstants.INIT_COMMENT, postId: post._id })
-        );
-        dispatch(success(res.posts));
-      },
-      (error) => {
-        dispatch(alertActions.error(error));
-      }
-    );
-  };
-
-  function success(posts) {
-    return { type: userConstants.GET_USER_PROFILE_POSTS, posts };
+    dispatch({ type: 'saveUserData', user})
   }
 }
 
@@ -234,15 +196,15 @@ function updateUserData(user) {
   return (dispatch) => {
     dispatch(request());
 
-    userService.updateUser(user).then(
-      (data) => {
-        dispatch(success(data.user));
-      },
-      (error) => {
-        dispatch(failure(error.toString()));
-        //dispatch(alertActions.error(error.toString()));
-      }
-    );
+    // userService.updateUser(user).then(
+    //   (data) => {
+    //     dispatch(success(data.user));
+    //   },
+    //   (error) => {
+    //     dispatch(failure(error.toString()));
+    //     //dispatch(alertActions.error(error.toString()));
+    //   }
+    // );
   };
 
   function request() {
@@ -256,22 +218,6 @@ function updateUserData(user) {
   }
 }
 
-function followUser(user) {
-  return (dispatch) => {
-    userService.followUser(user).then(
-      (user) => {
-        if (user.action === "followed") {
-          dispatch({ type: userConstants.FOLLOW_USER, user });
-        } else {
-          dispatch({ type: userConstants.UNFOLLOW_USER, user });
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
-}
 
 function getUserProfileData(username) {
   return (dispatch) => {
@@ -308,70 +254,3 @@ function getUserProfileData(username) {
   }
 }
 
-function getUserProfileFollowings(userId) {
-  return (dispatch) => {
-    userService.getUserProfileFollowings(userId).then(
-      (response) => {
-        dispatch(success(response.users[0].following));
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
-
-  function success(users) {
-    return { type: userConstants.GET_USER_PROFILE_FOLLOWINGS, users };
-  }
-}
-
-function getUserProfileFollowers(userId) {
-  return (dispatch) => {
-    userService.getUserProfileFollowers(userId).then(
-      (response) => {
-        dispatch(success(response.users[0].followers));
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
-
-  function success(users) {
-    return { type: userConstants.GET_USER_PROFILE_FOLLOWERS, users };
-  }
-}
-
-function getFollowings(userId) {
-  return (dispatch) => {
-    userService.getUserProfileFollowings(userId).then(
-      (response) => {
-        dispatch(success(response.users[0].following));
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
-
-  function success(users) {
-    return { type: userConstants.GET_USER_FOLLOWINGS, users };
-  }
-}
-
-function getFollowers(userId) {
-  return (dispatch) => {
-    userService.getUserProfileFollowers(userId).then(
-      (response) => {
-        dispatch(success(response.users[0].followers));
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
-
-  function success(users) {
-    return { type: userConstants.GET_USER_FOLLOWERS, users };
-  }
-}

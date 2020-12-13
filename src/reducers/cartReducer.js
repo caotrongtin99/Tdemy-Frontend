@@ -11,6 +11,14 @@ export function cart(state = initialState, action) {
         ...state,
         carts: [...state.carts, action.course]
       };
+    case 'removeFromCart':
+      const {id} = action;
+      const carts = state.carts.filter(cart => cart.id !== id);
+      debugger
+      return {
+        ...state,
+        carts
+      };
     case 'clearCart':
     return {
         carts: [],
