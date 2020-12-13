@@ -89,7 +89,7 @@ class Navbar extends Component {
                     <p >{course.name}</p>
                     <p style={{ marginLeft: '20px'}}>{course.price}$</p>
                 </div>) : <Empty description="Empty Cart"/>}
-                <Button style={{ marginTop: '10px'}} type="danger" ghost>View my cart</Button>
+                <Button style={{ marginTop: '10px'}} type="danger" ghost onClick={()=> history.push('/cart')}>View my cart</Button>
             </div>
         );
         const menu = (
@@ -165,7 +165,7 @@ class Navbar extends Component {
                                     </Popover>
                                     <Dropdown overlay={menu} trigger={['click']} style={{ marginLeft: '15px'}}>
                                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /><Icon type="down" />
+                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{this.props.user.name && <span>{this.props.user.name}</span>}<Icon type="down" />
                                         </a>
                                     </Dropdown>
                                 </Row>
@@ -196,6 +196,7 @@ class Navbar extends Component {
 }
 const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
-    carts: state.cart.carts
+    carts: state.cart.carts,
+    user: state.userProfile.data,
 })
 export default connect(mapStateToProps)(Navbar);

@@ -18,6 +18,10 @@ class CourseCard extends Component {
 
     addToCard = (course) => {
         this.props.dispatch(cartActions.addToCart(course));
+        notification.success({
+            message: 'Cart Notification',
+            description: 'This course has been added to the cart!'
+        })
     }
 
     handleAddWishList = (course) => {

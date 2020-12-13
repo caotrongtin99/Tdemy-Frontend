@@ -18,6 +18,7 @@ import TeacherCourseDetail from './pages/TeacherCourseDetail';
 import LoginPage from './pages/Login';
 import Footer from 'rc-footer';
 import 'rc-footer/assets/index.css';
+import Cart from './pages/Cart/Cart';
 class App extends React.Component {
   componentWillMount() {
 
@@ -41,6 +42,7 @@ class App extends React.Component {
                 <Route exact path='/login'>
                   {isLoggedIn ? <Redirect to="/" /> : <LoginPage />}
                 </Route>
+                <Route exact path='/cart' component={Cart} />
                 <Route exact path='/account' component={AccountPage}></Route>
                 <Route exact path='/teacher' component={TeacherDashboard} />
                 <Route exact path='/teacher/course' component={TeacherCourse} />

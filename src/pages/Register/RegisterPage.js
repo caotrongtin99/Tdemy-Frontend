@@ -26,11 +26,12 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        const {email ,password, isTeacher} = values;
+        const {email ,password, isTeacher, name} = values;
         const user = {
           email,
           password,
-          role: isTeacher
+          role: isTeacher,
+          name
         }
         dispatch(userActions.register(user));
       }
@@ -151,7 +152,7 @@ class RegistrationForm extends React.Component {
                 </span>
               }
             >
-              {getFieldDecorator('nickname', {
+              {getFieldDecorator('name', {
                 rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
               })(<Input />)}
             </Form.Item>

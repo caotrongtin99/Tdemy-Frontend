@@ -20,9 +20,11 @@ function login(email, password, accessToken, refreshToken) {
   return fetch(`${API_URL}/api/auth`, requestOptions)
     .then(handleResponse)
     .then((res) => {
+      console.log("===========res============", res);
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("token", res);
-      return res.user;
+      localStorage.setItem("token", res.data.accessToken);
+      localStorage.setItem("token", res.data.ref_token);
+      return res.data;
     });
 }
 

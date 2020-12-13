@@ -32,6 +32,7 @@ export default class HotCourses extends Component {
         const courses = 
         [
             {
+            id: 1,
             name: 'Lap trinh web',
             avatar: 'https://images.pexels.com/photos/3059654/pexels-photo-3059654.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
             author: 'CTT',
@@ -42,6 +43,7 @@ export default class HotCourses extends Component {
             isInWishList: false,
             },
             {
+                id: 2,
                 name: 'Lap trinh di dong',
                 avatar: 'https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg',
                 author: 'Duc Thong',
@@ -52,6 +54,7 @@ export default class HotCourses extends Component {
                 isInWishList: false,
             },
             {
+                id: 3,
                 name: 'Lap trinh windows',
                 avatar: 'https://images.pexels.com/photos/1181534/pexels-photo-1181534.jpeg',
                 author: 'Ngo Truc',
@@ -62,6 +65,7 @@ export default class HotCourses extends Component {
                 isInWishList: false,
             },
             {
+                id: 4,
                 name: 'Lap trinh game',
                 avatar: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg',
                 author: 'Tin Cao',
