@@ -23,7 +23,7 @@ function login(email, password, accessToken, refreshToken) {
       console.log("===========res============", res);
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem("token", res.data.accessToken);
-      localStorage.setItem("token", res.data.ref_token);
+      localStorage.setItem("ref_token", res.data.ref_token);
       return res.data;
     });
 }

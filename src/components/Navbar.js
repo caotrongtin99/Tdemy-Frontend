@@ -81,13 +81,13 @@ class Navbar extends Component {
     }
     render() {
 
-        const {carts} = this.props;
+        const {carts, role} = this.props;
         const content = (
             <div>
                 {carts.length > 0 ? carts.map(course => <div style={{ cursor: 'pointer',display: 'flex', justifyContent: "space-between", alignItems: 'center', marginBottom: '5px'}}>
                     <img src={course.avatar} style={{width: '45px', height: '45px', marginRight: '20px'}}/>
                     <p >{course.name}</p>
-                    <p style={{ marginLeft: '20px'}}>{course.price}$</p>
+                    <p style={{ marginLeft: '20px'}}>{course.fee}$</p>
                 </div>) : <Empty description="Empty Cart"/>}
                 <Button style={{ marginTop: '10px'}} type="danger" ghost onClick={()=> history.push('/cart')}>View my cart</Button>
             </div>
@@ -111,7 +111,7 @@ class Navbar extends Component {
             <Header className="header" style={{ backgroundColor: '#fff' }}>
                 <Row type="flex" style={{ alignItems: 'center' }}>
                     <Col span={16}>
-                        {
+                        {   role === "student" &&
                             <Row type="flex" style={{ alignItems: "center", justifyContent: "start" }}>
                                 <img src={logo} style={{ height: '40px', cursor:'pointer' }} alt="" onClick={()=> history.push('/')}/>
                                 <Col span={4} style={{ marginLeft: '-100px' }}>
@@ -150,6 +150,7 @@ class Navbar extends Component {
                         {
                             !isLoggedIn ?
                                 <Row type="flex" justify="end" style={{ alignItems: "center" }}>
+                                    {}
                                     <Popover content={content} title="Cart">
                                         <Button ><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
                                     </Popover>,
@@ -160,9 +161,10 @@ class Navbar extends Component {
                                         Sign Up
                                 </Button>
                                 </Row> : <Row type="flex" justify="end" style={{ alignItems: 'center'}}>
+                                    {role !== "teacher" &&
                                     <Popover content={content} title="Cart">
                                         <Button style={{ marginRight: '15px'}}><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
-                                    </Popover>
+                                    </Popover>}
                                     <Dropdown overlay={menu} trigger={['click']} style={{ marginLeft: '15px'}}>
                                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{this.props.user.name && <span>{this.props.user.name}</span>}<Icon type="down" />
@@ -198,5 +200,6 @@ const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
     carts: state.cart.carts,
     user: state.userProfile.data,
+    role: state.userProfile.data.role === 1 ? "teacher" : "student" 
 })
 export default connect(mapStateToProps)(Navbar);

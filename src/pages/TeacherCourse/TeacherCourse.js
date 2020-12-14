@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Icon, Row, Col, Input, Button, PageHeader } from 'antd'
 import { history } from '../../_helpers/history';
+import {connect} from 'react-redux'
+import { courseActions } from '../../actions/courseActions';
 const { Search } = Input;
 
 
@@ -10,6 +12,11 @@ class TeacherCourse extends Component {
         this.state = {
             searchKeyword: ''
         }
+    }
+
+    componentDidMount () {
+        const {user} = this.props;
+        this.props.dispatch(courseActions.getTeacherCourses(user.id))
     }
     
     handleSearch = (e) => {
@@ -22,23 +29,7 @@ class TeacherCourse extends Component {
         history.push(`/teacher/course/manage/${id}`)
     }
     render() {
-        const courses = [
-            {
-                id: 1,
-                name: 'Web Development A - Z',
-                avatar: 'https://www.udemy.com/staticx/udemy/images/course/100x100/placeholder.png'
-            },
-            {
-                id: 2,
-                name: 'Mobile Development A - Z',
-                avatar: 'https://www.udemy.com/staticx/udemy/images/course/100x100/placeholder.png'
-            },
-            {
-                id: 3,
-                name: 'ReactJS Zero - Hero',
-                avatar: 'https://www.udemy.com/staticx/udemy/images/course/100x100/placeholder.png'
-            }
-        ]
+        const courses = this.props.teacherCourses;
         return (
             <div className='teacher-dashboard'>
                 <div className="main-content-teacher-course">
@@ -66,11 +57,11 @@ class TeacherCourse extends Component {
                             </ul>
                         </Col>
                     </Row>
-                    <Row className="search-course" type="flex" justify="center" style={{ paddingTop: '10px', marginTop: '30px' }}>
+                    <Row className="search-course" type="flex" justify="center" style={{ paddingTop: '10px', marginTop: '30px', marginBottom: '100px' }}>
                         <Col span={16}>
                             <Row type="flex" justify="space-between">
                                 <Search placeholder="input search text" style={{ width: 350 }} onChange={(value) => this.handleSearch(value)} enterButton />
-                                <Button type="danger">New Course</Button>
+                                <Button onClick={() => history.push('/teacher/course/create')} type="danger">New Course</Button>
                             </Row>
                             <div className="course-list" style={{ marginTop: '25px' }}>
                                 {courses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
@@ -87,5 +78,9 @@ class TeacherCourse extends Component {
         )
     };
 }
-
-export default TeacherCourse;
+const mapStateToProps = state => ({
+    loggedIn: state.authentication.loggedIn,
+    user: state.userProfile.data,
+    teacherCourses: state.teacherCourse.data.courses
+})
+export default connect(mapStateToProps)(TeacherCourse);

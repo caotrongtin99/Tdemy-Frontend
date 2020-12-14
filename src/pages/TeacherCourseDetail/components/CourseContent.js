@@ -1,6 +1,7 @@
 import { Card, Row, Col, Button, Icon, Upload } from 'antd';
 import CollectionCreateForm from './CollectionCreateForm';
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import { Typography } from 'antd';
 
 const { Text } = Typography;
@@ -9,55 +10,55 @@ class CourseContent extends Component {
         super(props);
         this.state = {
             chapters: [
-                {
-                    id: 1,
-                    title: 'Introduce Course',
-                    url: ''
-                },
-                {
-                    id: 2,
-                    title: 'LifeCycle Hook in Angular',
-                    url: ''
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                },
-                {
-                    id: 3,
-                    title: 'Two-ways binding in Angular',
-                    url: 'abc.com'
-                }
+                // {
+                //     id: 1,
+                //     title: 'Introduce Course',
+                //     url: ''
+                // },
+                // {
+                //     id: 2,
+                //     title: 'LifeCycle Hook in Angular',
+                //     url: ''
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },                {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // },
+                // {
+                //     id: 3,
+                //     title: 'Two-ways binding in Angular',
+                //     url: 'abc.com'
+                // }
             ],
             visible: false
         };
@@ -132,4 +133,9 @@ class CourseContent extends Component {
     }
 }
 
-export default CourseContent;
+const mapStateToProps = state => ({
+    loggedIn: state.authentication.loggedIn,
+    currentCourse: state.teacherCourse.data.currentCourse,
+    alert: state.alert
+})
+export default connect(mapStateToProps)(CourseContent);

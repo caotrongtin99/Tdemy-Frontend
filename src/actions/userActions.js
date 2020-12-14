@@ -104,6 +104,7 @@ function login(email, password, accessToken, refreshToken) {
     debugger
     userService.login(email, password).then(
       (data) => {
+        console.log("==========sata===========", data)
         dispatch(userActions.saveUserData(data))
         dispatch(success(data))
         history.push("/");
@@ -187,6 +188,7 @@ function getUserData(queryParams) {
 }
 
 function saveUserData(user) {
+  debugger
   return (dispatch) => {
     dispatch({ type: 'saveUserData', user})
   }

@@ -19,7 +19,7 @@ class Cart extends React.Component {
     calTotal() {
         const { carts } = this.props;
         const total = carts.reduce((acc, cur) => {
-            return acc + cur.price - 0;
+            return acc + cur.fee - 0;
         }, 0)
         return total;
     }
@@ -42,7 +42,7 @@ class Cart extends React.Component {
                             <p style={{ fontSize: "20px", fontWeight: 'bold' }}>{cart.name}</p>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span style={{ fontSize: '18px', marginRight: '20px' }}>${cart.price}</span>
+                            <span style={{ fontSize: '18px', marginRight: '20px' }}>${cart.fee}</span>
                             <Popconfirm
                                 title="Are you sure delete this item?"
                                 onConfirm={() => this.confirm(cart.id)}

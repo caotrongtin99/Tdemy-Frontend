@@ -49,6 +49,7 @@ export function userProfile(state = initialState, action) {
     case "saveUserData": 
       const {user} = action;
       const newData = {...state.data, name: user.name, email: user.email, role: user.role, avater: user.avatar};
+      debugger
       return {
         ...state,
         data: {...state.data, ...newData}

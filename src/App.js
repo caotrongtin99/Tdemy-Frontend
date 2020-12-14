@@ -25,8 +25,8 @@ class App extends React.Component {
   }
 
   render() {
-    console.log("========env==========", process.env.NODE_ENV);
-    const isLoggedIn = _.get(this.props, 'loggedIn');
+    const {isLoggedIn, role }= this.props;
+    console.log("=========role", role);
     return (
       <BrowserRouter>
         <Router history={history}>
@@ -35,7 +35,9 @@ class App extends React.Component {
               <Navbar style={{ position: 'fixed' }} />
               <BackTop />
               <Switch>
-                <Route exact path='/' component={HomePage} />
+                <Route exact path='/'>
+                  {role === "teacher" ? <Redirect to="/teacher"/> : <HomePage/>}
+                </Route>
                 <Route exact path='/register' >
                   {isLoggedIn ? <Redirect to="/" /> : <RegisterPage />}
                 </Route>
@@ -73,6 +75,8 @@ class App extends React.Component {
 
 
 const mapStateToProps = state => ({
-  loggedIn: state.authentication.loggedIn
+  loggedIn: state.authentication.loggedIn,
+  userProfile: state.userProfile.data,
+  role: state.userProfile.data.role === 1 ? 'teacher' : 'student'
 })
 export default connect(mapStateToProps)(App);
