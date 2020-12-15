@@ -5,11 +5,10 @@ import LearnSkill from '../../static/images/LearnSkill.png';
 import Career from '../../static/images/Carreer.png';
 import Certificate from '../../static/images/certificate.png';
 import Organization from '../../static/images/organization.png';
-import HotCourses from '../../Components/HotCourses';
-
+import HotCourses from '../../components/HotCourses';
+// import HotCourses from '../../components/HotCourses';
 
 class HomePage extends Component {
-
 
     render() {
         return (
@@ -28,6 +27,16 @@ class HomePage extends Component {
                                     Join for free
                                 </button>
                             </Row>
+                        </div>
+                    </div>
+                    <div className="banner2 banner">
+                        <div style={{ color: 'white' }} className="in-banner">
+                            <h2 style={{ fontSize: '60px', color: 'white' }}>
+                                Aspire for more
+                            </h2>
+                            <p style={{ fontFamily: 'Open Sans', fontSize: '22px', fontWeight: 'bold' }}>
+                                Learning keeps you in the lead. Get in-demand skills to impress anyone.
+                            </p>
                         </div>
                     </div>
                     {/* <div className="banner2 banner">
@@ -72,7 +81,7 @@ class HomePage extends Component {
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>What to learn next</h2>
                     <Row style={{ paddingBottom: '100px'}}>
-                    <HotCourses/>
+                        <HotCourses/>
                     </Row>
                     </Col>
                 </Row>

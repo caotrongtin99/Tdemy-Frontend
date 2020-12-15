@@ -1,15 +1,41 @@
-import { Card, Popover, Row, Button, Tag } from 'antd'
+import { Card, Popover, Row, Button, Tag, notification } from 'antd'
 import React, { Component } from 'react'
 import Rate from 'rc-rate';
 import 'rc-rate/assets/index.css';
 import Heart from "react-animated-heart";
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import {cartActions} from '../actions/cartActions';
+import { history } from '../_helpers/history';
 
-export default class CourseCard extends Component {
+class CourseCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isInWishList : this.props.course.isInWishList
+        }
+    }
+
+    addToCard = (course) => {
+        this.props.dispatch(cartActions.addToCart(course));
+        notification.success({
+            message: 'Cart Notification',
+            description: 'This course has been added to the cart!'
+        })
+    }
+
+    handleAddWishList = (course) => {
+        debugger
+        if (this.props.isLoggedIn) {
+            debugger
+            this.setState({
+                isInWishList: !this.state.isInWishList
+            })
+        } else {
+            notification.warning({
+                message: 'Login Required!',
+                description: 'Please login to add course to wishlist!'
+            })
         }
     }
     render() {
@@ -19,10 +45,10 @@ export default class CourseCard extends Component {
                 <h2 style={{ fontWeight: 'bold' }}>{course.name}</h2>
                 <Tag color="magenta">{course.category}</Tag>
                 <Row type="flex" style={{ alignItems: "center"}}>
-                    <Button type="danger" danger>
-                        Add to card
+                    <Button type="danger" danger onClick={() => this.addToCard(course)}>
+                        Add to cart
                     </Button>
-                    <Heart isClick={this.state.isInWishList} onClick={() => this.setState({ isInWishList : !this.state.isInWishList})} />
+                    <Heart isClick={this.state.isInWishList} onClick={() => this.handleAddWishList(course)} />
                 </Row>
             </div>
         );
@@ -48,3 +74,9 @@ export default class CourseCard extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    loggedIn: state.authentication.loggedIn
+})
+
+export default connect(mapStateToProps)(CourseCard);

@@ -5,13 +5,11 @@ import { registration } from "./registrationReducer";
 import { user } from "./userReducer";
 import { alert } from "./alertReducer";
 import { post } from "./postReducer";
-import { comments } from "./commentReducer";
-import { replies } from "./commentRepliesReducer";
+import { teacherCourse } from "./teacherCourseReducer";
 import { userProfile } from "./userProfileReducer";
-import { notification } from "./notificationReducer";
 import { socket } from "./socketReducer";
 import { postUpload } from "./postUploadPageReducer";
-import { chat } from "./chatReducer";
+import { cart } from "./cartReducer";
 import { newUsers } from "./newUsersReducer";
 import { passwordReset } from "./passwordResetReducer";
 import { userConstants } from "../_constants/userConstants";
@@ -24,13 +22,11 @@ const appReducer = combineReducers({
   newUsers,
   passwordReset,
   alert,
-  comments,
-  replies,
   userProfile,
-  notification,
   socket,
   postUpload,
-  chat,
+  cart,
+  teacherCourse
 });
 
 const rootReducer = (state, action) => {
