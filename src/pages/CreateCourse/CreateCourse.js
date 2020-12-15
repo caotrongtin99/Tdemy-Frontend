@@ -14,7 +14,8 @@ class CreateCourse extends Component {
         this.state = {
             step: 0,
             name: '',
-            category: 'Web Development'
+            category: 'Web Development',
+            description: ''
         }
     }
 
@@ -32,10 +33,9 @@ class CreateCourse extends Component {
 
     handleCreateCourse = _ => {
         const course = {
-            owner_id: this.props.user.id,
             name: this.state.name,
             category: [this.state.category],
-            accessToken: localStorage.getItem('token')
+            short_description: this.state.description,
         }
         this.props.dispatch(courseActions.createCourse(course))
     }
@@ -51,6 +51,12 @@ class CreateCourse extends Component {
             name: e
         })
     }
+
+    onChangeDescription(e) {
+        this.setState({
+            description: e
+        })
+    }
     render() {
         const { step } = this.state;
         return (
@@ -61,7 +67,7 @@ class CreateCourse extends Component {
                             <Steps current={step}>
                                 <Step title="Step 1" description="Course name." />
                                 <Step title="Step 2" description="Category." />
-                                <Step title="Waiting" description="This is a description." />
+                                <Step title="Step 3" description="Description." />
                             </Steps>
                             {step === 0 && <div>
                                 <Row type="flex" justify="center" style={{ marginTop: '60px' }}>
@@ -101,18 +107,14 @@ class CreateCourse extends Component {
                             </div>}
                             {step === 2 && <div>
                                 <Row type="flex" justify="center" style={{ marginTop: '60px' }}>
-                                    <h1 style={{ fontSize: '30px' }}>What category best fits the knowledge you'll share?</h1>
+                                    <h1 style={{ fontSize: '30px' }}>Short Description for the course?</h1>
                                 </Row>
                                 <Row type="flex" justify="center" style={{ marginTop: '20px' }}>
-                                    <p style={{ fontSize: '14px' }}>If you're not sure about the right category, you can change it later.</p>
+                                    <p style={{ fontSize: '14px' }}>It's ok if you can't think of a good title now. You can change it later.</p>
                                 </Row>
                                 <Row type="flex" justify="center" style={{ marginTop: '60px' }}>
                                     <Col span={14}>
-                                        <Select defaultValue="Game Development" style={{ width: '100%'}}>
-                                            <Option value="Mobile Development">Mobile Development</Option>
-                                            <Option value="Web Development">Web Development</Option>
-                                            <Option value="Game Development">Game Development</Option>
-                                        </Select>
+                                        <Input onChange={(e) => this.onChangeDescription(e.target.value)} placeholder="e.g. A beginners guide to learn Machine Learning including Hands on from scratch." />
                                     </Col>
                                 </Row>
                                 <Row type="flex" justify="center" style={{ marginTop: '20px' }}>

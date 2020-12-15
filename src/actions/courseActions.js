@@ -8,7 +8,9 @@ export const courseActions = {
     createCourse,
     updateCourse,
     getCourseDetail,
-    getTeacherCourses
+    getTeacherCourses,
+    createChapter,
+    updateChapter
 };
 
 function createCourse(course) {
@@ -16,7 +18,6 @@ function createCourse(course) {
         // dispatch({ type: 'creatCourse', course });
         courseService.createCourse(course)
             .then(data => {
-                debugger
                 dispatch({type: 'createCourse', data});
                 history.push(`/teacher/course/manage/${data.id}`)
             })
@@ -41,55 +42,41 @@ function updateCourse(course) {
     };
 }
 
-
-
 function getCourseDetail(id) {
     return (dispatch) => {
         courseService.getCourseDetail(id)
         .then(data => {
-            console.log("========data action =========", data);
+            console.log("============data============", data);
             dispatch({ type: 'getCourseDetail', data})
         })
-        // dispatch({ type: 'getCourseDetail', courseId});
-
-        // userService.updateUser(user).then(
-        //   (data) => {
-        //     dispatch(success(data.user));
-        //   },
-        //   (error) => {
-        //     dispatch(failure(error.toString()));
-        //     //dispatch(alertActions.error(error.toString()));
-        //   }
-        // );
     };
-
-    function request() {
-        return { type: userConstants.USER_UPDATE_REQUEST };
-    }
-    function success(user) {
-        return { type: userConstants.USER_UPDATE_SUCCESS, user };
-    }
-    function failure(error) {
-        return { type: userConstants.USER_UPDATE_FAILURE, error };
-    }
 }
 
 function getTeacherCourses(id) {
     return (dispatch) => {
         courseService.getTeacherCourses(id)
         .then(data => {
-            debugger
-            dispatch({ type: 'getTeacherCourse', data: data.data})
+            dispatch({ type: 'getTeacherCourse', data: data.data.array})
         })
     };
+}
 
-    function request() {
-        return { type: userConstants.USER_UPDATE_REQUEST };
+function createChapter(chapter) {
+    return (dispatch) => {
+        courseService.createChapter(chapter)
+            .then(data => {
+                dispatch({ type: 'saveChapter', data})
+            })
     }
-    function success(user) {
-        return { type: userConstants.USER_UPDATE_SUCCESS, user };
-    }
-    function failure(error) {
-        return { type: userConstants.USER_UPDATE_FAILURE, error };
+}
+
+function updateChapter(courseId, chapter) {
+    return (dispatch) => {
+        courseService.updateChapter(chapter)
+            .then(data => {
+                if (data[0] ==1){
+                    dispatch(courseActions.getCourseDetail(courseId));
+                }
+            })
     }
 }

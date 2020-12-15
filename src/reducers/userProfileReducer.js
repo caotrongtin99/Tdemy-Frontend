@@ -5,6 +5,7 @@ import { commentConstants } from "../_constants/commentConstants";
 const initialState = {
   loadingUser: true,
   data: {
+    id: "",
     name: "person.png",
     email: "",
     role: "",
@@ -48,7 +49,7 @@ export function userProfile(state = initialState, action) {
       };
     case "saveUserData": 
       const {user} = action;
-      const newData = {...state.data, name: user.name, email: user.email, role: user.role, avater: user.avatar};
+      const newData = {...state.data, name: user.name, email: user.email, role: user.role, avater: user.avatar, id: user.id};
       debugger
       return {
         ...state,

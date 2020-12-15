@@ -15,7 +15,9 @@ class TeacherCourse extends Component {
     }
 
     componentDidMount () {
+        debugger
         const {user} = this.props;
+        debugger
         this.props.dispatch(courseActions.getTeacherCourses(user.id))
     }
     
@@ -29,7 +31,8 @@ class TeacherCourse extends Component {
         history.push(`/teacher/course/manage/${id}`)
     }
     render() {
-        const courses = this.props.teacherCourses;
+        const courses = this.props.teacherCourses || [];
+        const visibleCourses = courses.filter(course => course.name.toLowerCase().includes(this.state.searchKeyword.toLowerCase()));
         return (
             <div className='teacher-dashboard'>
                 <div className="main-content-teacher-course">
@@ -64,7 +67,7 @@ class TeacherCourse extends Component {
                                 <Button onClick={() => history.push('/teacher/course/create')} type="danger">New Course</Button>
                             </Row>
                             <div className="course-list" style={{ marginTop: '25px' }}>
-                                {courses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
+                                {visibleCourses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
                                     <img src={course.avatar} height={118} />
                                     <div style={{ padding: '10px 0px 10px 20px' }}>
                                         <h2>{course.name}</h2>

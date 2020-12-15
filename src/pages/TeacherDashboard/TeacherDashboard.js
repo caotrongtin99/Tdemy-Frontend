@@ -46,7 +46,8 @@ class TeacherDashboard extends Component {
                     </SideNav.Nav>
                 </SideNav>
                 <div className="main-content-teacher">
-                    
+                    <div style={{height: '90vh'}}>
+                    </div>
                 </div>
             </div>
         )

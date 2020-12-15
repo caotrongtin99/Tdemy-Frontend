@@ -5,7 +5,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line
     class extends React.Component {
         render() {
-            const { visible, onCancel, onCreate, form } = this.props;
+            const { visible, onCancel, onCreate, form, uploadVideo} = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Modal
@@ -26,7 +26,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                                 valuePropName: 'fileList',
                                 getValueFromEvent: this.normFile,
                             })(
-                                <Upload name="logo" action="/upload.do" listType="picture">
+                                <Upload name="logo" action={uploadVideo}>
                                     <Button>
                                         <Icon type="upload" /> Click to upload
                                      </Button>

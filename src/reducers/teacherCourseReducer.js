@@ -5,7 +5,7 @@ import { commentConstants } from "../_constants/commentConstants";
 const initialState = {
     data: {
         currentCourse: {
-
+            chapters: []
         },
         courses: [
 
@@ -22,10 +22,6 @@ export function teacherCourse(state = initialState, action) {
             };
 
         case "getCourseDetail":
-            console.log("==========a VO DUOC REDUCER ======", action.data)
-            console.log("======new state ========", {
-                ...state.data, currentCourse: action.data
-            })
             return {
                 ...state,
                 data: {
@@ -33,10 +29,6 @@ export function teacherCourse(state = initialState, action) {
                 },
             };
         case "getTeacherCourse":
-            console.log("==========get techer courses VO DUOC REDUCER ======", action.data)
-            console.log("======new state ========", {
-                ...state.data, courses: action.data
-            })
             return {
                 ...state,
                 data: {
@@ -50,6 +42,13 @@ export function teacherCourse(state = initialState, action) {
             return {
                 ...state,
                 data: { ...state.data, ...newData }
+            }
+        case "saveChapter":
+            console.log("========new chapter ===========", action.data)
+            console.log("========add chapter======", { ...state.data, currentCourse: {...state.data.currentCourse, chapters: [...state.data.currentCourse.chapters,action.data]} })
+            return {
+                ...state,
+                data: { ...state.data, currentCourse: {...state.data.commentConstantscurrentCourse, chapters: [...state.data.currentCourse.chapters,action.data]} }
             }
         default:
             return state;

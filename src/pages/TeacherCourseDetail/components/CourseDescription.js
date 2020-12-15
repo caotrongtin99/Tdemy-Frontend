@@ -35,7 +35,6 @@ class CourseDescription extends Component {
       const course = {
         id: currentCourse.id,
         description: value,
-        accessToken: localStorage.getItem('token')
       }
       debugger
       this.props.dispatch(courseActions.updateCourse(course));

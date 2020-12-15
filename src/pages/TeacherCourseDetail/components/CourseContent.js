@@ -1,66 +1,21 @@
 import { Card, Row, Col, Button, Icon, Upload } from 'antd';
 import CollectionCreateForm from './CollectionCreateForm';
 import React, { Component } from 'react'
+
 import {connect} from 'react-redux'
 import { Typography } from 'antd';
+import { courseActions } from '../../../actions/courseActions';
+const credentials = require('../../../static/js/credentials.json');
+
 
 const { Text } = Typography;
 class CourseContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chapters: [
-                // {
-                //     id: 1,
-                //     title: 'Introduce Course',
-                //     url: ''
-                // },
-                // {
-                //     id: 2,
-                //     title: 'LifeCycle Hook in Angular',
-                //     url: ''
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },                {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Two-ways binding in Angular',
-                //     url: 'abc.com'
-                // }
-            ],
-            visible: false
+            visible: false,
+            title: ''
+
         };
     }
 
@@ -75,30 +30,37 @@ class CourseContent extends Component {
     };
 
     handleCreate = () => {
-    const { form } = this.formRef.props;
-    form.validateFields((err, values) => {
-        if (err) {
-        return;
-        }
+        const { form } = this.formRef.props;
+        form.validateFields((err, values) => {
+            if (err) {
+            return;
+            }
 
-        const { title, upload} = values;
-        const chapters = [...this.state.chapters, {title, url: ''}]
-        form.resetFields();
-        this.setState(
-        { 
-            visible: false, 
-            chapters
-        }
-        );
-    });
+            const { title, upload} = values;
+            const chapter = { title, courseId: this.props.currentCourse.id}
+            form.resetFields();
+            this.props.dispatch(courseActions.createChapter(chapter));
+            this.setState({ visible: false})
+        });
     };
+
+    onChangeTitle = (e, currentChapter) => {
+        debugger
+        const chapter = {
+            id: currentChapter.id,
+            title: e,
+            courseId: currentChapter.course_id
+        }
+        this.props.dispatch(courseActions.updateChapter(currentChapter.course_id, chapter))
+
+    }
 
     saveFormRef = formRef => {
     this.formRef = formRef;
     };
 
     render() {
-        const { chapters } = this.state;
+        const { chapters } = this.props.currentCourse;
         return (
             <Row type="flex" justify="center">
                 <Col span={18}>
@@ -112,7 +74,7 @@ class CourseContent extends Component {
                     </Row>
                     {chapters.map((chapter, key) => <Card style={{ marginBottom: '15px' }} title={<>
                         <span style={{ fontWeight: 'bold' }}>{`Lesson ${key + 1}: `}</span>
-                        <Text editable >{`${chapter.title}`}</Text>
+                        <Text editable={{ onChange: (e) => this.onChangeTitle(e,chapter)}} >{`${chapter.title}`}</Text>
                     </>
                     }>
                         {chapter.url !== '' ? <Upload><span><Icon type="file-image" /> {chapter.url}</span></Upload> :
@@ -126,6 +88,7 @@ class CourseContent extends Component {
                         visible={this.state.visible}
                         onCancel={this.handleCancel}
                         onCreate={this.handleCreate}
+                        uploadVideo={this.uploadVideo}
                     />
                 </Col>
             </Row>

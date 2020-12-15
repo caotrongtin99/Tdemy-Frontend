@@ -5,19 +5,22 @@ export const courseService = {
     createCourse,
     updateCourse,
     getCourseDetail,
-    getTeacherCourses
+    getTeacherCourses,
+    createChapter,
+    updateChapter
 };
 
 
 function createCourse(course) {
-    debugger
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
     body: JSON.stringify(course),
   };
 
-  return fetch(`${API_URL}/api/courses`, requestOptions)
+  return fetch(`${API_URL}/api/courses/new`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;
@@ -25,13 +28,18 @@ function createCourse(course) {
 }
 
 function updateCourse(course) {
+  const id = course.id;
+  delete course.id;
   const requestOptions = {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+     },
     body: JSON.stringify(course),
   };
 
-  return fetch(`${API_URL}/api/courses/${course.id}`, requestOptions)
+  return fetch(`${API_URL}/api/courses/${id}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;
@@ -39,7 +47,14 @@ function updateCourse(course) {
 }
 
 function getCourseDetail(id) {
-  return fetch(`${API_URL}/api/courses/${id}`)
+const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json",
+        "x-access-token": localStorage.getItem('token'),
+        "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    };
+  return fetch(`${API_URL}/api/courses/${id}`,requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;
@@ -49,13 +64,50 @@ function getCourseDetail(id) {
 
 async function getTeacherCourses(id) {
     const res = await axios.post(`${API_URL}/api/courses`, {
-        params: {
-          accessToken: localStorage.getItem('ref_token'),
           type: 'teacher',
           type_id: id
-        }
-      })
+      }, {
+          headers: {
+        "x-access-token": localStorage.getItem('token'),
+        "x-refresh-token": localStorage.getItem('ref_token')
+    }})
     return res.data;
+}
+
+
+async function createChapter(chapter) {
+    const res = await axios.post(`${API_URL}/api/courses/${chapter.courseId}/chapters`, {
+        title: chapter.title,
+        status: 0,
+        duration: 123
+    }, {
+        headers: {
+      "x-access-token": localStorage.getItem('token'),
+      "x-refresh-token": localStorage.getItem('ref_token')
+  }})
+  return res.data.data.dataValues;
+}
+
+function updateChapter(chapter) {
+  const id = chapter.id;
+  const courseId = chapter.courseId;
+  delete chapter.id;
+  delete chapter.courseId;
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+     },
+    body: JSON.stringify(chapter),
+  };
+
+  return fetch(`${API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      console.log("============res==============", res)
+      return res.data;
+    });
 }
 
 

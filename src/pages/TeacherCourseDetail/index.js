@@ -49,8 +49,6 @@ class TeacherCourseDetail extends Component {
     }
     render() {
         const {currentCourse} = this.props; 
-
-        console.log("=======cur course render ========", currentCourse)
         return (
             <div className='teacher-dashboard'>
                 <div className="main-content-teacher-course" style={{ height: '90vh'}}>
