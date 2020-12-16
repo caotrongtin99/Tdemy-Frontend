@@ -28,8 +28,10 @@ function createCourse(course) {
 }
 
 function updateCourse(course) {
+  console.log("==========course ============", course)
   const id = course.id;
   delete course.id;
+  console.log("========id==========", id)
   const requestOptions = {
     method: "PUT",
     headers: { "Content-Type": "application/json",

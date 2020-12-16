@@ -15,9 +15,7 @@ class TeacherCourse extends Component {
     }
 
     componentDidMount () {
-        debugger
         const {user} = this.props;
-        debugger
         this.props.dispatch(courseActions.getTeacherCourses(user.id))
     }
     

@@ -7,7 +7,9 @@ import CourseCard from './CourseCard';
 
 
 export default class HotCourses extends Component {
-
+    handleOnlick = () => {
+        debugger
+    }
     render() {
         const responsive = {
             superLargeDesktop: {
@@ -94,7 +96,7 @@ export default class HotCourses extends Component {
                     itemClass="carousel-item-padding-40-px"
                 >
                     {
-                        courses.map(course => <CourseCard course={course}/>)
+                        courses.map(course => <CourseCard onClick={this.handleOnlick} course={course}/>)
                     }
                 </Carousel>
             </>

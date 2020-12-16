@@ -3,6 +3,7 @@ import { postConstants } from "../_constants/postConstants";
 import { courseService } from "../_services/courseService";
 import { alertActions } from "./alertActions";
 import { history } from "../_helpers/history";
+import { notification } from "antd";
 
 export const courseActions = {
     createCourse,
@@ -29,14 +30,18 @@ function createCourse(course) {
 }
 
 function updateCourse(course) {
+    const {id} = course;
     return (dispatch) => {
         // dispatch({ type: 'creatCourse', course });
         courseService.updateCourse(course)
             .then(data => {
-                debugger
                 if (data[0] ==1){
-                    dispatch(alertActions.success("Update course fee successfully!!"))
-                    getCourseDetail(course.id);
+                    // dispatch(alertActions.success("Update course fee successfully!!"))
+                    notification.success({
+                        message: 'Update message',
+                        description: 'Update Course successfully!'
+                    })
+                    dispatch(courseActions.getCourseDetail(id));
                 }
             })
     };
@@ -76,6 +81,10 @@ function updateChapter(courseId, chapter) {
             .then(data => {
                 if (data[0] ==1){
                     dispatch(courseActions.getCourseDetail(courseId));
+                    notification.success({
+                        message: 'Update message',
+                        description: 'Update Chapter successfully!'
+                    })
                 }
             })
     }

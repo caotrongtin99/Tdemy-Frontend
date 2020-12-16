@@ -20,7 +20,6 @@ export const userActions = {
 
 function logout() {
   userService.logout();
-  debugger
   return (dispatch) => {
     dispatch({ type: userConstants.LOGOUT });
   };

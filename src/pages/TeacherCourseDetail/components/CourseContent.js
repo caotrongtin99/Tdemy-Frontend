@@ -45,7 +45,6 @@ class CourseContent extends Component {
     };
 
     onChangeTitle = (e, currentChapter) => {
-        debugger
         const chapter = {
             id: currentChapter.id,
             title: e,

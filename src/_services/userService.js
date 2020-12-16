@@ -65,7 +65,6 @@ function sendforgotPasswordEmail(email) {
 }
 
 function logout() {
-  debugger
   localStorage.removeItem("token");
 }
 
@@ -79,7 +78,6 @@ function register(user) {
 }
 
 function handleResponse(response) {
-  debugger
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
     if (!response.ok) {

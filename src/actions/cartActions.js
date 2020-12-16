@@ -5,12 +5,10 @@ export const cartActions = {
 };
 
 function addToCart(course) {
-    debugger
   return (dispatch) => dispatch({ type: 'addToCart', course });
 }
 
 function removeFromCart(id) {
-  debugger
 return (dispatch) => dispatch({ type: 'removeFromCart', id });
 }
 
