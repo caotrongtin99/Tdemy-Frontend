@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux';
 import { Button, Carousel, Row, Col } from 'antd';
 import './style.css';
 import LearnSkill from '../../static/images/LearnSkill.png';
@@ -6,10 +7,14 @@ import Career from '../../static/images/Carreer.png';
 import Certificate from '../../static/images/certificate.png';
 import Organization from '../../static/images/organization.png';
 import HotCourses from '../../components/HotCourses';
+import { courseActions } from '../../actions/courseActions';
+import MostViewCourses from '../../components/MostViewCourses';
 // import HotCourses from '../../components/HotCourses';
 
 class HomePage extends Component {
-
+    componentDidMount = () => {
+        this.props.dispatch(courseActions.getMostViewCourses())
+    }
     render() {
         return (
             <div className='homepage'>
@@ -85,9 +90,20 @@ class HomePage extends Component {
                     </Row>
                     </Col>
                 </Row>
+                <Row type="flex" justify="center">
+                    <Col span={22} style={{ margin: '0 auto'}}>
+                    <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Most View Courses</h2>
+                    <Row style={{ paddingBottom: '100px'}}>
+                        <MostViewCourses/>
+                    </Row>
+                    </Col>
+                </Row>
             </div>
         )
     };
 }
+const mapStateToProps = state => ({
+    user: state.userProfile.data
+})
 
-export default HomePage;
+export default connect(mapStateToProps)(HomePage);

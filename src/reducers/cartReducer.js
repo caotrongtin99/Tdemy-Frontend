@@ -7,6 +7,7 @@ export function cart(state = initialState, action) {
 
   switch (action.type) {
     case 'addToCart':
+      debugger
       return {
         ...state,
         carts: [...state.carts, action.course]

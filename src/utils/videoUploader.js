@@ -18,6 +18,4 @@ const upload = async (video) => {
             name, title
         })
     }))
-
-    
 }

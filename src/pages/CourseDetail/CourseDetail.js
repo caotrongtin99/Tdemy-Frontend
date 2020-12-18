@@ -1,48 +1,52 @@
-import { Card, Popover, Row, Button, Icon, Typography, PageHeader } from 'antd'
+import { Card, Popover, Row, Button, Icon, Typography, PageHeader, notification } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
+import Rate from 'rc-rate';
 import Heart from "react-animated-heart";
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { courseActions } from '../../actions/courseActions';
+import { cartActions } from '../../actions/cartActions';
 const { Paragraph } = Typography;
 
-class CourseCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            course: {
-                id: 1,
-                name: 'Lap trinh web',
-                avatar: 'https://images.pexels.com/photos/3059654/pexels-photo-3059654.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-                author: 'CTT',
-                rating: 4.5,
-                fee: 10,
-                discount: 3,
-                category: 'Web',
-                isInWishList: false,
-            }
-        }
+class CourseDetail extends Component {
+    componentDidMount = () => {
+        const {match} = this.props;
+        this.props.dispatch(courseActions.getCourseDetail(match.params.id))
     }
 
+    handleAddToCart = (course) => {
+        let isExist = false;
+        this.props.cartItems.forEach(item => {
+            if (item.id === course.id) {
+                isExist = true;
+                return;
+            }
+        })
+        debugger
+        !isExist ? this.props.dispatch(cartActions.addToCart(course)) : notification.error({ message: 'Cart Notification', description: 'The course already exists in the shopping cart'})
+    }
     render() {
+        const { course } = this.props;
+        debugger
         const IconLink = ({ src, text }) => (
             <a
-              style={{
-                marginRight: 16,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <img
                 style={{
-                  marginRight: 8,
+                    marginRight: 16,
+                    display: 'flex',
+                    alignItems: 'center',
                 }}
-                src={src}
-                alt="start"
-              />
-              {text}
+            >
+                <img
+                    style={{
+                        marginRight: 8,
+                    }}
+                    src={src}
+                    alt="start"
+                />
+                {text}
             </a>
-          );
+        );
         const Content = ({ children, extraContent }) => {
             return (
                 <Row className="content" type="flex">
@@ -67,58 +71,76 @@ class CourseCard extends Component {
             },
             {
                 path: 'first',
-                breadcrumbName: this.state.course.category,
+                breadcrumbName: course.category[0],
             },
             {
                 path: 'second',
-                breadcrumbName: this.state.course.name,
+                breadcrumbName: course.name,
             },
         ];
         const content = (
             <div className="content">
-              <Paragraph>
-                Ant Design interprets the color system into two levels: a system-level color system and a
-                product-level color system.
+                <Row type="flex" style={{ alignItems: 'center'}}>
+                    <Rate
+                        count={5}
+                        defaultValue={course.rate || 0}
+                        allowHalf={true}
+                        disabled
+                    /> <p style={{ marginLeft: '15px'}}>({course.feedback_count} rangtings) {course.enroll_count} students</p>
+                </Row>
+                <Paragraph>
+                    Ant Design interprets the color system into two levels: a system-level color system and a
+                    product-level color system.
               </Paragraph>
-              <Paragraph>
-                Ant Design&#x27;s design team preferred to design with the HSB color model, which makes it
-                easier for designers to have a clear psychological expectation of color when adjusting colors,
-                as well as facilitate communication in teams.
+                <Paragraph>
+                    Ant Design&#x27;s design team preferred to design with the HSB color model, which makes it
+                    easier for designers to have a clear psychological expectation of color when adjusting colors,
+                    as well as facilitate communication in teams.
               </Paragraph>
-              <Row className="contentLink" type="flex">
-                <IconLink
-                  src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg"
-                  text="Quick Start"
-                />
-                <IconLink
-                  src="https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg"
-                  text=" Product Info"
-                />
-                <IconLink
-                  src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
-                  text="Product Doc"
-                />
-              </Row>
+                <Row className="contentLink" type="flex">
+                    <IconLink
+                        src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg"
+                        text="Quick Start"
+                    />
+                    <IconLink
+                        src="https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg"
+                        text=" Product Info"
+                    />
+                    <IconLink
+                        src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
+                        text="Product Doc"
+                    />
+                </Row>
+                <Row type="flex" style={{ marginTop: '20px', alignItems: 'center'}}>
+                    <Button type="danger" ghost style={{ marginRight: '20px'}} onClick={() => this.handleAddToCart(course)}>
+                        <Icon type="shopping-cart"/> Add to Cart
+                    </Button>
+                    <Button type="primary" ghost>
+                        <Icon type="heart" /> Add to Wishlist
+                    </Button>
+                    <Button type="danger" style={{ marginLeft: '20px'}}>
+                        <Icon type="share-alt" /> Share
+                    </Button>
+                </Row>
             </div>
-          );
+        );
         return (
             <>
                 <div style={{ color: 'white' }}>
                     <PageHeader
                         style={{
-                            backgroundImage: 'linear-gradient(90deg, rgb(0, 71, 144), rgb(29, 104, 179))',
                             padding: '30px 64px',
                             color: 'white !important'
-                            // border: '1px solid rgb(235, 237, 240)'
                         }}
-                        title="Title"
+                        title={course.name}
                         breadcrumb={{ routes }}
-                        subTitle="This is a subtitle"
+                        subTitle={course.teacher.name}
                     >
                         <Content
                             extraContent={
                                 <img
-                                    src="https://gw.alipayobjects.com/mdn/mpaas_user/afts/img/A*KsfVQbuLRlYAAAAAAAAAAABjAQAAAQ/original"
+                                    style={{ width: '200px', height: '200px' }}
+                                    src={course.avatar_url}
                                     alt="content"
                                 />
                             }
@@ -126,7 +148,7 @@ class CourseCard extends Component {
                             {content}
                         </Content>
                     </PageHeader>
-                    <div style={{ height: '50vh'}}>
+                    <div style={{ height: '50vh', backgroundColor: 'white' }}>
 
                     </div>
                 </div>
@@ -136,7 +158,9 @@ class CourseCard extends Component {
 }
 
 const mapStateToProps = state => ({
-    loggedIn: state.authentication.loggedIn
+    loggedIn: state.authentication.loggedIn,
+    course: state.teacherCourse.data.currentCourse,
+    cartItems: state.cart.carts
 })
 
-export default connect(mapStateToProps)(CourseCard);
+export default connect(mapStateToProps)(CourseDetail);

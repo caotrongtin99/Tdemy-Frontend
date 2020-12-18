@@ -11,7 +11,9 @@ export const courseActions = {
     getCourseDetail,
     getTeacherCourses,
     createChapter,
-    updateChapter
+    updateChapter,
+    getStudentCourses,
+    getMostViewCourses
 };
 
 function createCourse(course) {
@@ -51,7 +53,6 @@ function getCourseDetail(id) {
     return (dispatch) => {
         courseService.getCourseDetail(id)
         .then(data => {
-            console.log("============data============", data);
             dispatch({ type: 'getCourseDetail', data})
         })
     };
@@ -62,6 +63,24 @@ function getTeacherCourses(id) {
         courseService.getTeacherCourses(id)
         .then(data => {
             dispatch({ type: 'getTeacherCourse', data: data.data.array})
+        })
+    };
+}
+
+function getStudentCourses(id) {
+    return (dispatch) => {
+        courseService.getStudentCourses(id)
+        .then(data => {
+            dispatch({ type: 'getStudentCourses', data: data.data.array})
+        })
+    };
+}
+
+function getMostViewCourses() {
+    return (dispatch) => {
+        courseService.getMostViewCourses()
+        .then(data => {
+            dispatch({ type: 'getMostViewCourses', data: data})
         })
     };
 }
