@@ -5,7 +5,6 @@ import { commentConstants } from "../_constants/commentConstants";
 const initialState = {
     data: {
         currentCourse: {
-            chapters: []
         },
         courses: [
 
@@ -16,12 +15,20 @@ const initialState = {
 export function teacherCourse(state = initialState, action) {
     switch (action.type) {
         case "createCourse":
+            
             return {
                 ...state,
                 data: { ...state.data, currentCourse: action.data }
             };
+        case "createFeedback":
+        
+            return {
+                ...state,
+                data: { ...state.data, currentCourse: { ...state.data.currentCourse, feedback: [...state.data.currentCourse.feedback,action.data]} }
+            };
 
         case "getCourseDetail":
+            console.log("===================gio moi vao ne================")
             return {
                 ...state,
                 data: {
@@ -38,7 +45,7 @@ export function teacherCourse(state = initialState, action) {
         case "saveUserData":
             const { user } = action;
             const newData = { ...state.data, name: user.name, email: user.email, role: user.role, avater: user.avatar };
-            debugger
+            
             return {
                 ...state,
                 data: { ...state.data, ...newData }

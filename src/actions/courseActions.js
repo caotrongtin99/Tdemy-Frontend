@@ -13,14 +13,18 @@ export const courseActions = {
     createChapter,
     updateChapter,
     getStudentCourses,
-    getMostViewCourses
+    getMostViewCourses,
+    deleteCourse,
+    createEnroll
 };
 
 function createCourse(course) {
+    
     return (dispatch) => {
         // dispatch({ type: 'creatCourse', course });
         courseService.createCourse(course)
             .then(data => {
+                
                 dispatch({type: 'createCourse', data});
                 history.push(`/teacher/course/manage/${data.id}`)
             })
@@ -49,11 +53,27 @@ function updateCourse(course) {
     };
 }
 
+function deleteCourse(course) {
+    const {id} = course;
+    return (dispatch) => {
+        courseService.deleteCourse(course)
+            .then(data => {
+                if (data === 0){
+                    notification.success({
+                        message: 'Delete message',
+                        description: 'Delete Course successfully!'
+                    })
+                    history.push('/teacher/course/')
+                }
+            })
+    };
+}
+
 function getCourseDetail(id) {
     return (dispatch) => {
         courseService.getCourseDetail(id)
         .then(data => {
-            dispatch({ type: 'getCourseDetail', data})
+            dispatch({ type: 'getCourseDetail', data});
         })
     };
 }
@@ -89,8 +109,23 @@ function createChapter(chapter) {
     return (dispatch) => {
         courseService.createChapter(chapter)
             .then(data => {
-                dispatch({ type: 'saveChapter', data})
+                if (data !== -1){
+                    dispatch({ type: 'saveChapter', data})
+                    notification.success({
+                        message: 'Chapter Notification',
+                        description: 'Create chapter successfully!'
+                    })
+                }
             })
+    }
+}
+
+function createEnroll(courseIds) {
+    return (dispatch) => {
+        courseService.createEnroll(courseIds)
+            .then(data => {
+                    dispatch({ type: 'addMyCourses', data: data.array})
+                    })
     }
 }
 

@@ -1,21 +1,25 @@
-const youtube = require('youtube-api');
-const credentials = require('../static/js/credentials.json');
-
-const oAuth = youtube.authenticate({
-    type: 'oauth',
-    client_id: credentials.web.client_id,
-    client_secret: credentials.web.client_secret,
-    redirect_uri: credentials.web.redirect_uris[0]
-})
+const cloudinary = require('cloudinary/lib/cloudinary');
+cloudinary.config({
+    cloud_name: "dmdtwsdi7",
+    api_key: "234357432693483",
+    api_secret: "TwFF2N3JWQFPWtgaSsx-4yulN1Y",
+});
 
 const upload = async (video) => {
-    const {name, title} = video;
-    debugger
-    open(oAuth.generateAuthUrl({
-        access_type: 'offline',
-        scope: 'https://www.googleapis.com/auth/youtube.upload',
-        state: JSON.stringify({
-            name, title
-        })
-    }))
-}
+    try {
+        return await cloudinary.uploader.upload(video, {
+            resource_type: "video",
+            chunk_size: 6000000,
+            eager: [
+                { width: 300, height: 300, crop: "pad", audio_codec: "none" },
+                { width: 160, height: 100, crop: "crop", gravity: "south", audio_codec: "none" }],
+            eager_async: true,
+            upload_large: true
+        });
+    } catch (error) {
+        console.log("===============video upload service ===========", error)
+        return { error: error.message };
+    }
+};
+
+export default upload;

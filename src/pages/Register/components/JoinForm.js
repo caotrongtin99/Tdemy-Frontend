@@ -19,7 +19,7 @@ class JoinForm extends Component {
 
     handleSubmit = () => {
         const {fullname, email, password} = this.state;
-        debugger
+        
     }
     render() {
 		const { fullname, email, password } = this.state;

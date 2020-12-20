@@ -22,7 +22,7 @@ class LoginPage extends React.Component {
             const refreshToken =" abc";
             dispatch(userActions.login(email, password, accessToken, refreshToken))
                 .then(data=> {
-                    debugger
+                    
                 })
           }
         });

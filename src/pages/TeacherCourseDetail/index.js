@@ -55,11 +55,18 @@ class TeacherCourseDetail extends Component {
         }
         this.props.dispatch(courseActions.updateCourse(course));
     }
+    handleDeleteCourse = () => {
+        const {currentCourse} = this.props;
+        const course = {
+            id: currentCourse.id,
+        }
+        this.props.dispatch(courseActions.deleteCourse(course));
+    }
     render() {
         const {currentCourse} = this.props; 
         return (
             <div className='teacher-dashboard'>
-                <div className="main-content-teacher-course" style={{ height: '90vh'}}>
+                <div className="main-content-teacher-course" style={{paddingBottom: '250px'}}>
                     <PageHeader
                         style={{
                             border: '1px solid rgb(235, 237, 240)',
@@ -68,7 +75,8 @@ class TeacherCourseDetail extends Component {
                         title="Config Course"
                         subTitle={currentCourse.name}
                         extra={[
-                            <Button type="primary" ghost onClick={this.handlePublishCourse} key="3">{currentCourse.status === -1 ? 'Publish' : 'Lock'}</Button>
+                            <Button type="primary" ghost onClick={this.handlePublishCourse} key="3">{currentCourse.status === -1 ? 'Publish' : 'Lock'}</Button>,
+                            <Button type="danger" ghost onClick={this.handleDeleteCourse} key="3">Delete</Button>
                           ]}
                     />,
                     <Row type="flex" justify="center">

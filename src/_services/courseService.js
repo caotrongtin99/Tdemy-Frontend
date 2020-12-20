@@ -1,5 +1,6 @@
 import {config} from '../_constants/api';
 import axios from 'axios'
+import { notification } from 'antd';
 const {API_URL} = config;
 export const courseService = {
     createCourse,
@@ -9,9 +10,10 @@ export const courseService = {
     createChapter,
     updateChapter,
     getStudentCourses,
-    getMostViewCourses
+    getMostViewCourses,
+    deleteCourse,
+    createEnroll
 };
-
 
 function createCourse(course) {
   const requestOptions = {
@@ -25,6 +27,7 @@ function createCourse(course) {
   return fetch(`${API_URL}/api/courses/new`, requestOptions)
     .then(handleResponse)
     .then((res) => {
+      
       return res.data;
     });
 }
@@ -48,6 +51,24 @@ function updateCourse(course) {
     });
 }
 
+function deleteCourse(course) {
+  const id = course.id;
+  delete course.id;
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+     }
+  };
+
+  return fetch(`${API_URL}/api/courses/${id}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      return res.result;
+    });
+}
+
 function getCourseDetail(id) {
   const requestOptions = {
     method: "GET",
@@ -59,11 +80,10 @@ function getCourseDetail(id) {
   return fetch(`${API_URL}/api/courses/${id}`,requestOptions)
     .then(handleResponse)
     .then((res) => {
-      debugger
+      console.log("=========res from service =============", res);
       return res.data;
     });
 }
-
 
 async function getTeacherCourses(id) {
     const res = await axios.post(`${API_URL}/api/courses`, {
@@ -97,10 +117,9 @@ async function getMostViewCourses() {
         "x-access-token": localStorage.getItem('token'),
         "x-refresh-token": localStorage.getItem('ref_token')
   }})
-  debugger
+  
   return res.data.data.array;
 }
-
 
 async function createChapter(chapter) {
     const res = await axios.post(`${API_URL}/api/courses/${chapter.courseId}/chapters`, {
@@ -112,7 +131,11 @@ async function createChapter(chapter) {
       "x-access-token": localStorage.getItem('token'),
       "x-refresh-token": localStorage.getItem('ref_token')
   }})
-  return res.data.data.dataValues;
+  if (res.data.result === -1) {
+    notification.error({ message: 'Error!'})
+    return res.data.result;
+  }
+  return res.data.data;
 }
 
 function updateChapter(chapter) {
@@ -136,7 +159,26 @@ function updateChapter(chapter) {
     });
 }
 
+function createEnroll(courseIds) {
+  const data = {course_id: courseIds}
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(data),
+  };
 
+  return fetch(`${API_URL}/api/enroll`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      if (res.result === 0){
+        return res.data;
+      } else {
+        notification.error({message: 'Error!!!'})
+      }
+    });
+}
 
 function handleResponse(response) {
   return response.text().then((text) => {

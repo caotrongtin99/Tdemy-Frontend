@@ -8,7 +8,7 @@ import CourseCard from './CourseCard';
 
 class MostViewCourses extends Component {
     handleOnlick = () => {
-        debugger
+        
     }
     render() {
         const responsive = {

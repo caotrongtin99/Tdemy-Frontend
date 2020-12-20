@@ -38,15 +38,17 @@ export function studentCourse(state = initialState, action) {
         case "saveUserData":
             const { user } = action;
             const newData = { ...state.data, name: user.name, email: user.email, role: user.role, avater: user.avatar };
-            debugger
+            
             return {
                 ...state,
                 data: { ...state.data, ...newData }
             }
-        case "saveChapter":
+        case "addMyCourses":
+            const a = action.data;
+            debugger
             return {
                 ...state,
-                data: { ...state.data, currentCourse: { ...state.data.commentConstantscurrentCourse, chapters: [...state.data.currentCourse.chapters, action.data] } }
+                data: { ...state.data, myCourses: [...state.data.myCourses,...action.data] }
             }
         default:
             return state;
