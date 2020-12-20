@@ -26,6 +26,7 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        
         const {email ,password, isTeacher, name} = values;
         const user = {
           email,
@@ -33,6 +34,8 @@ class RegistrationForm extends React.Component {
           role: isTeacher,
           name
         }
+        const a  = this.props.form.getFieldValue('password');
+        
         dispatch(userActions.register(user));
       }
     });

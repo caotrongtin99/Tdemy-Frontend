@@ -5,6 +5,7 @@ export const cartActions = {
 };
 
 function addToCart(course) {
+  console.log("========course =============", course);
   return (dispatch) => dispatch({ type: 'addToCart', course });
 }
 

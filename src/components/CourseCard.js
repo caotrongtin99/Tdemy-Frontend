@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { cartActions } from '../actions/cartActions';
 import { history } from '../_helpers/history';
+import { courseActions } from '../actions/courseActions';
 
 class CourseCard extends Component {
     constructor(props) {
@@ -38,7 +39,10 @@ class CourseCard extends Component {
         }
     }
 
-    handleViewDetail(course) {
+    async handleViewDetail(course) {
+        // await this.props.dispatch(courseActions.getCourseDetail(course.id))
+        // const a = this.props;
+        // debugger
         history.push(`/course/${course.id}`)
     }
 
@@ -64,7 +68,7 @@ class CourseCard extends Component {
                             hoverable
                             style={{ width: 300 }}
                             // onClick={this.handleViewDetail(course)}
-                            cover={<img alt="example" src={course.avatar} />}
+                            cover={<img alt="example" src={course.avatar_url} />}
                         >
                             <h4>{course.name}</h4>
                             <p>{course.author}</p>

@@ -6,7 +6,7 @@ export const userService = {
   sendVerificationEmail,
   sendforgotPasswordEmail,
   register,
-  getNewUsers,
+  createComment
 };
 
 
@@ -20,7 +20,6 @@ function login(email, password, accessToken, refreshToken) {
   return fetch(`${API_URL}/api/auth`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-      console.log("===========res============", res);
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("ref_token", res.data.ref_token);
@@ -28,19 +27,6 @@ function login(email, password, accessToken, refreshToken) {
     });
 }
 
-function getNewUsers(params) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...params }),
-  };
-
-  return fetch("/api/user/getNewUsers", requestOptions)
-    .then(handleResponse)
-    .then((res) => {
-      return res;
-    });
-}
 
 function sendVerificationEmail(email) {
   const requestOptions = {
@@ -75,6 +61,25 @@ function register(user) {
     body: JSON.stringify(user),
   };
   return fetch(`${API_URL}/api/users/`, requestOptions).then(handleResponse);
+}
+
+function createComment(feedback) {
+  const id = feedback.id;
+  delete feedback.id;
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(feedback),
+  };
+
+  return fetch(`${API_URL}/api/courses/${id}/feedback`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      
+      return res.data;
+    });
 }
 
 function handleResponse(response) {

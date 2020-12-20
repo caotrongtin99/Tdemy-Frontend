@@ -8,7 +8,7 @@ import CourseCard from './CourseCard';
 
 export default class HotCourses extends Component {
     handleOnlick = () => {
-        debugger
+        
     }
     render() {
         const responsive = {

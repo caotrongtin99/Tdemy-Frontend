@@ -7,6 +7,7 @@ export function cart(state = initialState, action) {
 
   switch (action.type) {
     case 'addToCart':
+      
       return {
         ...state,
         carts: [...state.carts, action.course]
@@ -14,7 +15,7 @@ export function cart(state = initialState, action) {
     case 'removeFromCart':
       const {id} = action;
       const carts = state.carts.filter(cart => cart.id !== id);
-      debugger
+      
       return {
         ...state,
         carts

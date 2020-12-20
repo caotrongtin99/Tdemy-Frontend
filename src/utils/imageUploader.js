@@ -9,6 +9,7 @@ const upload = async (image) => {
   try {
     return await cloudinary.uploader.upload(image);
   } catch (error) {
+    console.log("===============imgae upload service ===========", error)
     return { error: error.message };
   }
 };

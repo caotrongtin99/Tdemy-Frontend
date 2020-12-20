@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Icon, Row, Col, Input, Button, PageHeader } from 'antd'
+import { Icon, Row, Col, Input, Button, PageHeader, Popconfirm } from 'antd'
 import { history } from '../../_helpers/history';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { courseActions } from '../../actions/courseActions';
 const { Search } = Input;
 
@@ -14,19 +14,23 @@ class TeacherCourse extends Component {
         }
     }
 
-    componentDidMount () {
-        const {user} = this.props;
+    componentDidMount() {
+        const { user } = this.props;
         this.props.dispatch(courseActions.getTeacherCourses(user.id))
     }
-    
+
     handleSearch = (e) => {
         this.setState({
             searchKeyword: e.target.value
         })
     }
 
-    handleClickCourseDetail =(id) => {
+    handleClickCourseDetail = (id) => {
         history.push(`/teacher/course/manage/${id}`)
+    }
+
+    deleteCourse = (courseId) => {
+        console.log("==========course id ==============", courseId);
     }
     render() {
         const courses = this.props.teacherCourses || [];
@@ -65,10 +69,15 @@ class TeacherCourse extends Component {
                                 <Button onClick={() => history.push('/teacher/course/create')} type="danger">New Course</Button>
                             </Row>
                             <div className="course-list" style={{ marginTop: '25px' }}>
-                                {visibleCourses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer' }}>
-                                    <img src={course.avatar} height={118} />
-                                    <div style={{ padding: '10px 0px 10px 20px' }}>
-                                        <h2>{course.name}</h2>
+                                {visibleCourses.map(course => <Row onClick={() => this.handleClickCourseDetail(course.id)} type="flex" justify="space-between" className="course" style={{ height: '120px', marginBottom: '15px', cursor: 'pointer', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex'}}>
+                                        <img src={course.avatar_url} height={118} width={200} />
+                                        <div style={{ padding: '10px 0px 10px 20px' }}>
+                                            <h2>{course.name}</h2>
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '200px'}}>
+
                                     </div>
                                 </Row>)}
                             </div>

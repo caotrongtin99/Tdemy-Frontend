@@ -62,13 +62,13 @@ class CoursePlan extends Component {
     }
 
     handleChange = info => {
-        debugger
+        
         if (info.file.status === 'uploading') {
           this.setState({ loading: true });
           return;
         }
         if (info.file.status === 'done') {
-            debugger
+            
           // Get this url from response in real world.
           getBase64(info.file.originFileObj, imageUrl =>
             this.setState({
@@ -83,7 +83,7 @@ class CoursePlan extends Component {
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const { alert, currentCourse } = this.props;
         const {imageUrl} = this.state;
-        debugger
+        
         const uploadButton = (
             <div>
                 <Icon type={this.state.loading ? 'loading' : 'plus'} />
