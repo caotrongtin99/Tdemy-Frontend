@@ -5,14 +5,15 @@ import 'rc-rate/assets/index.css';
 import Heart from "react-animated-heart";
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import {cartActions} from '../actions/cartActions';
+import { cartActions } from '../actions/cartActions';
 import { history } from '../_helpers/history';
+import { courseActions } from '../actions/courseActions';
 
 class CourseCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isInWishList : this.props.course.isInWishList
+            isInWishList: this.props.course.isInWishList
         }
     }
 
@@ -25,9 +26,8 @@ class CourseCard extends Component {
     }
 
     handleAddWishList = (course) => {
-        debugger
+        const a = this.props.isLoggedIn;
         if (this.props.isLoggedIn) {
-            debugger
             this.setState({
                 isInWishList: !this.state.isInWishList
             })
@@ -38,13 +38,21 @@ class CourseCard extends Component {
             })
         }
     }
+
+    async handleViewDetail(course) {
+        // await this.props.dispatch(courseActions.getCourseDetail(course.id))
+        // const a = this.props;
+        // debugger
+        history.push(`/course/${course.id}`)
+    }
+
     render() {
         const { course } = this.props;
         const content = (
             <div>
                 <h2 style={{ fontWeight: 'bold' }}>{course.name}</h2>
                 <Tag color="magenta">{course.category}</Tag>
-                <Row type="flex" style={{ alignItems: "center"}}>
+                <Row type="flex" style={{ alignItems: "center" }}>
                     <Button type="danger" danger onClick={() => this.addToCard(course)}>
                         Add to cart
                     </Button>
@@ -55,20 +63,23 @@ class CourseCard extends Component {
         return (
             <>
                 <Popover content={content} placement="right">
-                    <Card
-                        hoverable
-                        style={{ width: 300 }}
-                        cover={<img alt="example" src={course.avatar} />}
-                    >
-                        <h4>{course.name}</h4>
-                        <p>{course.author}</p>
-                        <Rate
-                            count={5}
-                            defaultValue={course.rating}
-                            allowHalf={true}
-                            disabled
-                        />,
+                    <div onClick={() => this.handleViewDetail(course)}>
+                        <Card
+                            hoverable
+                            style={{ width: 300 }}
+                            // onClick={this.handleViewDetail(course)}
+                            cover={<img alt="example" src={course.avatar_url} />}
+                        >
+                            <h4>{course.name}</h4>
+                            <p>{course.author}</p>
+                            <Rate
+                                count={5}
+                                defaultValue={course.rating}
+                                allowHalf={true}
+                                disabled
+                            />,
                     </Card>,
+                    </div>
                 </Popover>
             </>
         );
@@ -76,7 +87,7 @@ class CourseCard extends Component {
 }
 
 const mapStateToProps = state => ({
-    loggedIn: state.authentication.loggedIn
+    isLoggedIn: state.authentication.loggedIn
 })
 
 export default connect(mapStateToProps)(CourseCard);

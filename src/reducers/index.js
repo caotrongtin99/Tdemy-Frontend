@@ -6,6 +6,7 @@ import { user } from "./userReducer";
 import { alert } from "./alertReducer";
 import { post } from "./postReducer";
 import { teacherCourse } from "./teacherCourseReducer";
+import { studentCourse } from "./studentCourseReducer";
 import { userProfile } from "./userProfileReducer";
 import { socket } from "./socketReducer";
 import { postUpload } from "./postUploadPageReducer";
@@ -26,7 +27,8 @@ const appReducer = combineReducers({
   socket,
   postUpload,
   cart,
-  teacherCourse
+  teacherCourse,
+  studentCourse
 });
 
 const rootReducer = (state, action) => {

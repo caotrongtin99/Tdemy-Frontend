@@ -5,12 +5,11 @@ export const cartActions = {
 };
 
 function addToCart(course) {
-    debugger
+  console.log("========course =============", course);
   return (dispatch) => dispatch({ type: 'addToCart', course });
 }
 
 function removeFromCart(id) {
-  debugger
 return (dispatch) => dispatch({ type: 'removeFromCart', id });
 }
 

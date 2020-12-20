@@ -36,7 +36,7 @@ class CourseDescription extends Component {
         id: currentCourse.id,
         description: value,
       }
-      debugger
+      
       this.props.dispatch(courseActions.updateCourse(course));
     }
 

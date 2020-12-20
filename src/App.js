@@ -19,6 +19,8 @@ import LoginPage from './pages/Login';
 import Footer from 'rc-footer';
 import 'rc-footer/assets/index.css';
 import Cart from './pages/Cart/Cart';
+import CourseDetail from './pages/CourseDetail/CourseDetail';
+import SearchPage from './pages/SearchPage/SearchPage';
 class App extends React.Component {
   componentWillMount() {
 
@@ -26,7 +28,6 @@ class App extends React.Component {
 
   render() {
     const {isLoggedIn, role }= this.props;
-    console.log("=========role", role);
     return (
       <BrowserRouter>
         <Router history={history}>
@@ -49,6 +50,8 @@ class App extends React.Component {
                 <Route exact path='/teacher' component={TeacherDashboard} />
                 <Route exact path='/teacher/course' component={TeacherCourse} />
                 <Route exact path='/teacher/course/create' component={CreateCourse} />
+                <Route exact path='/course/:id' component={CourseDetail} />
+                <Route exact path='/courses/search' component={SearchPage} />
                 <Route exact path='/teacher/course/manage/:id' component={TeacherCourseDetail} />
               </Switch>
               <Footer

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Row, notification, Input, Button, Form, Upload, message } from 'antd'
+import { Icon, Row, Spin, Input, Button, Form, Upload, message } from 'antd'
 import { alertActions } from '../../../actions/alertActions';
 import { courseActions } from '../../../actions/courseActions';
 import upload from '../../../utils/imageUploader'
@@ -28,8 +28,8 @@ function getBase64(img, callback) {
 
 class CoursePlan extends Component {
     state = {
-        imageUploading: false,
-        imageUrl: 'https://images.pexels.com/photos/2681319/pexels-photo-2681319.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+        loading: false,
+        imageUrl: this.props.currentCourse.avatar_url
     }
     componentDidMount = () => {
         // const { params: { id } } = this.props.match;
@@ -44,6 +44,7 @@ class CoursePlan extends Component {
                 const course = {
                     id: currentCourse.id,
                     fee: fee - 0,
+                    avatar_url: this.state.imageUrl
                 }
                 this.props.dispatch(courseActions.updateCourse(course));
             }
@@ -61,13 +62,13 @@ class CoursePlan extends Component {
     }
 
     handleChange = info => {
-        debugger
+        
         if (info.file.status === 'uploading') {
           this.setState({ loading: true });
           return;
         }
         if (info.file.status === 'done') {
-            debugger
+            
           // Get this url from response in real world.
           getBase64(info.file.originFileObj, imageUrl =>
             this.setState({
@@ -82,18 +83,15 @@ class CoursePlan extends Component {
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const { alert, currentCourse } = this.props;
         const {imageUrl} = this.state;
+        
         const uploadButton = (
             <div>
-                <Icon type={this.state.imageUploading ? 'loading' : 'plus'} />
+                <Icon type={this.state.loading ? 'loading' : 'plus'} />
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
         return (
             <Form layout="inline" onSubmit={this.handleSubmit}>
-                {this.props.alert.type && notification.success({
-                    title: 'Update',
-                    description: 'Update fee course successfully!'
-                })}
                 <Row>
                     <Form.Item label="Avatar">
                         {getFieldDecorator('upload', {
