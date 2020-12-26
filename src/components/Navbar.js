@@ -103,9 +103,11 @@ class Navbar extends Component {
                 <a onClick={this.handleClickInfomation}>Your Infomation</a>
               </Menu.Item>
               <Menu.Item key="1">
-                <a href="http://www.taobao.com/">Your Course</a>
+                <a onClick={()=> history.push('/course/my-courses')}>Your Course</a>
               </Menu.Item>
-              <Menu.Item key="3">Your Wishlist</Menu.Item>
+              <Menu.Item key="3">
+                <a onClick={()=> history.push('/course/my-wishlist')}>My Wishlist</a>
+              </Menu.Item>
               <Menu.Item key="3">Payment History</Menu.Item>
               <Menu.Divider />
               <Menu.Item key="3" onClick={this.handleLogout}>Log out</Menu.Item>

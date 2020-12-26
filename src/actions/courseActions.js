@@ -15,7 +15,9 @@ export const courseActions = {
     getStudentCourses,
     getMostViewCourses,
     deleteCourse,
-    createEnroll
+    createEnroll,
+    addToWishList,
+    getStudentWishList
 };
 
 function createCourse(course) {
@@ -127,6 +129,26 @@ function createEnroll(courseIds) {
                     dispatch({ type: 'addMyCourses', data: data.array})
                     })
     }
+}
+
+function addToWishList(courseId) {
+    debugger
+    return (dispatch) => {
+        courseService.addToWishList(courseId)
+            .then(data => {
+                debugger
+                    // dispatch({ type: 'addMyCourses', data: data.array})
+                    })
+    }
+}
+
+function getStudentWishList() {
+    return (dispatch) => {
+        courseService.getStudentWishList()
+        .then(data => {
+            // dispatch({ type: 'getMostViewCourses', data: data})
+        })
+    };
 }
 
 function updateChapter(courseId, chapter) {
