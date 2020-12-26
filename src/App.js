@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -21,6 +21,10 @@ import 'rc-footer/assets/index.css';
 import Cart from './pages/Cart/Cart';
 import CourseDetail from './pages/CourseDetail/CourseDetail';
 import SearchPage from './pages/SearchPage/SearchPage';
+import MyCourses from './pages/MyCourses/MyCourses';
+import CourseLesson from './pages/CourseLesson/CourseLesson';
+import MyWishList from './pages/MyWishList/MyWishList';
+
 class App extends React.Component {
   componentWillMount() {
 
@@ -46,10 +50,27 @@ class App extends React.Component {
                   {isLoggedIn ? <Redirect to="/" /> : <LoginPage />}
                 </Route>
                 <Route exact path='/cart' component={Cart} />
-                <Route exact path='/account' component={AccountPage}></Route>
-                <Route exact path='/teacher' component={TeacherDashboard} />
-                <Route exact path='/teacher/course' component={TeacherCourse} />
-                <Route exact path='/teacher/course/create' component={CreateCourse} />
+                <Route exact path='/account' component={AccountPage}>
+                  {isLoggedIn ? <Redirect to="/login" /> : <AccountPage />}
+                </Route>
+                <Route exact path='/teacher' >
+                  { isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <TeacherDashboard/>}
+                </Route>
+                <Route exact path='/teacher/course'>
+                  {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <TeacherCourse/>}
+                </Route>
+                <Route exact path='/teacher/course/create'>
+                {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <CreateCourse/>}
+                </Route>
+                <Route exact path='/course/my-courses'>
+                {isLoggedIn? <Redirect to="/login"/> : role === "teacher" ? <Redirect to="/" />: <MyCourses />}
+                </Route>
+                <Route exact path='/course/my-courses/:id'>
+                {isLoggedIn? <Redirect to="/login"/> : role === "teacher" ? <Redirect to="/" />: <CourseLesson/>}
+                </Route>
+                <Route exact path='/course/my-wishlist'>
+                {isLoggedIn? <Redirect to="/login"/> : role === "teacher" ? <Redirect to="/" />: <MyWishList/>}
+                </Route>
                 <Route exact path='/course/:id' component={CourseDetail} />
                 <Route exact path='/courses/search' component={SearchPage} />
                 <Route exact path='/teacher/course/manage/:id' component={TeacherCourseDetail} />

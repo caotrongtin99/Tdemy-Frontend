@@ -17,7 +17,17 @@ class CourseCard extends Component {
         }
     }
 
+    componentDidMount = () => {
+        if (this.props.isLoggedIn){
+            const {user} = this.props;
+            debugger
+            this.props.dispatch(courseActions.getStudentCourses(user.id))
+        }
+    }
+
     addToCard = (course) => {
+        const {myCourses} = this.props;
+        debugger
         this.props.dispatch(cartActions.addToCart(course));
         notification.success({
             message: 'Cart Notification',
@@ -26,11 +36,10 @@ class CourseCard extends Component {
     }
 
     handleAddWishList = (course) => {
+        debugger
         const a = this.props.isLoggedIn;
         if (this.props.isLoggedIn) {
-            this.setState({
-                isInWishList: !this.state.isInWishList
-            })
+            this.props.dispatch(courseActions.addToWishList(course.id))
         } else {
             notification.warning({
                 message: 'Login Required!',
@@ -40,24 +49,24 @@ class CourseCard extends Component {
     }
 
     async handleViewDetail(course) {
-        // await this.props.dispatch(courseActions.getCourseDetail(course.id))
-        // const a = this.props;
-        // debugger
-        history.push(`/course/${course.id}`)
+        const { match} = this.props;
+        const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
+        isMyCoursesPage ? history.push(`/course/my-courses/${course.id}`) : history.push(`/course/${course.id}`)
     }
 
     render() {
-        const { course } = this.props;
+        const { course , match} = this.props;
+        const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
         const content = (
             <div>
                 <h2 style={{ fontWeight: 'bold' }}>{course.name}</h2>
                 <Tag color="magenta">{course.category}</Tag>
-                <Row type="flex" style={{ alignItems: "center" }}>
+                {!isMyCoursesPage && <Row type="flex" style={{ alignItems: "center" }}>
                     <Button type="danger" danger onClick={() => this.addToCard(course)}>
                         Add to cart
                     </Button>
                     <Heart isClick={this.state.isInWishList} onClick={() => this.handleAddWishList(course)} />
-                </Row>
+                </Row>}
             </div>
         );
         return (
@@ -68,7 +77,7 @@ class CourseCard extends Component {
                             hoverable
                             style={{ width: 300 }}
                             // onClick={this.handleViewDetail(course)}
-                            cover={<img alt="example" src={course.avatar_url} />}
+                            cover={<img alt="example" style={{width: '298px', height: '200px'}} src={course.avatar_url} />}
                         >
                             <h4>{course.name}</h4>
                             <p>{course.author}</p>
@@ -87,7 +96,9 @@ class CourseCard extends Component {
 }
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.authentication.loggedIn
+    isLoggedIn: state.authentication.loggedIn,
+    user: state.authentication.user,
+    myCourses: state.studentCourse.data.myCourses
 })
 
 export default connect(mapStateToProps)(CourseCard);

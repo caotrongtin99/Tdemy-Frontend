@@ -5,14 +5,11 @@ import Rate from 'rc-rate';
 import Parser from 'html-react-parser';
 import moment from 'moment';
 import _ from 'lodash';
+import ModalVideo from 'react-modal-video'
 import { connect } from 'react-redux';
 import { courseActions } from '../../actions/courseActions';
 import { cartActions } from '../../actions/cartActions';
 import { commentActions } from '../../actions/commentActions';
-import { FloatingButton, Item } from "react-floating-button";
-import buyNowButton from '../../static/images/buy-button.svg'
-import cartButton from '../../static/images/cart.png'
-import ComponentList from '../../components/CommentList'
 import './style.css';
 import CommentList from '../../components/CommentList';
 const { Paragraph } = Typography;
@@ -38,14 +35,14 @@ class CourseDetail extends Component {
         list: [],
         feedbacks: [],
         submitting: false,
-        value: ''
+        value: '',
+        isOpen: false,
+        videoUrl: ''
     };
 
     componentWillMount = async () => {
         const { match } = this.props;
-        console.log("===================1=======================")
         await this.props.dispatch(courseActions.getCourseDetail(match.params.id))
-        console.log("============2========================")
     }
 
     componentDidMount = () => {
@@ -124,12 +121,18 @@ class CourseDetail extends Component {
             });
         }
       };
+
+      handlePreview = (chapter) => {
+          this.setState({
+              isOpen: true,
+              videoUrl: chapter.video_url
+          })
+      }
     render() {
         const { course } = this.props;
-        const { initLoading, loading, list, data, submitting, value } = this.state;
-        debugger
+        const { isOpen, videoUrl, list, data, submitting, value } = this.state;
         const courseFeedbacks = course.feedback || [];
-        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: feedback.User.name || '', content: feedback.comment, avatar: feedback.User.avatar_url || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment().fromNow()}));
+        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: _.get(feedback,'User.name') || '', content: feedback.comment, avatar: _.get(feedback, 'User.avatar_url') || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment().fromNow()}));
 
         const IconLink = ({ src, text }) => (
             <a
@@ -242,18 +245,7 @@ class CourseDetail extends Component {
         return (
             <>
                 <div style={{ color: 'white' }}>
-                    {/* <FloatingButton
-                        backgroundColor='1ef4fe'
-                        size='70'
-                        color='red'
-                    >
-                        <Item
-                            imgSrc={cartButton}
-                            onClick={() => {
-                                console.log("callback function here");
-                            }}
-                        />
-                    </FloatingButton>; */}
+                    <ModalVideo channel='custom' autoplay isOpen={isOpen} url={videoUrl} allowFullScreen={true} onClose={() => this.setState({ isOpen: false})} />
                     <PageHeader
                         style={{
                             padding: '30px 64px',
@@ -285,7 +277,7 @@ class CourseDetail extends Component {
                                     loadMore={loadMore}
                                     renderItem={item => (
                                         <List.Item
-                                            actions={[<a key="list-loadmore-edit">Preview</a>]}>
+                                            actions={[<a key="list-loadmore-edit" onClick={() => this.handlePreview(item)}>{item.status === 0 && 'Preview'}</a>]}>
                                             <Skeleton avatar title={false} loading={item.loading} active>
                                                 <List.Item.Meta
                                                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}

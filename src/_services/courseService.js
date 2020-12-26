@@ -12,7 +12,9 @@ export const courseService = {
     getStudentCourses,
     getMostViewCourses,
     deleteCourse,
-    createEnroll
+    createEnroll,
+    addToWishList,
+    getStudentWishList
 };
 
 function createCourse(course) {
@@ -73,8 +75,8 @@ function getCourseDetail(id) {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json",
-        //"x-access-token": localStorage.getItem('token'),
-        //"x-refresh-token": localStorage.getItem('ref_token')
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
     },
     };
   return fetch(`${API_URL}/api/courses/${id}`,requestOptions)
@@ -180,7 +182,45 @@ function createEnroll(courseIds) {
     });
 }
 
+function addToWishList(courseId) {
+  const data = {course_id: courseId}
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(data),
+  };
+
+  return fetch(`${API_URL}/api/wishlist`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      debugger
+      if (res.result === 0){
+        return res.data;
+      } else {
+        notification.error({message: 'Error!!!'})
+      }
+    });
+}
+
+function getStudentWishList(id) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    };
+  return fetch(`${API_URL}/api/wishlist/`,requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      console.log("=========res from service =============", res);
+      return res.data;
+    });
+}
 function handleResponse(response) {
+  debugger
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
     if (!response.ok) {

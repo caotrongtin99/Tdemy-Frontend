@@ -10,7 +10,6 @@ class Cart extends React.Component {
 
     };
     confirm(itemId) {
-        
         this.props.dispatch(cartActions.removeFromCart(itemId))
         message.success('Remove Successfully');
     }
@@ -28,6 +27,7 @@ class Cart extends React.Component {
         const {carts} = this.props;
         const courseIds = carts.map(cart => cart.id)
         this.props.dispatch(courseActions.createEnroll(courseIds));
+        history.push('/course/my-courses')
     }
     render() {
         const { carts } = this.props;
