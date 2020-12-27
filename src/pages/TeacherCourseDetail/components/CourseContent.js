@@ -11,29 +11,14 @@ const credentials = require('../../../static/js/credentials.json');
 
 
 const { Text } = Typography;
-
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
-  
-  function beforeUpload(file) {
-    const isJpgOrPng = 1;
-    const isLt2M = file.size / 1024 / 1024 < 200;
-    if (!isLt2M) {
-      message.error('Image must smaller than 200MB!');
-    }
-    return isJpgOrPng && isLt2M;
-  }
-
 class CourseContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             visible: false,
             title: '',
-
+            video_url: '',
+            uploading: false
         };
     }
 
@@ -53,7 +38,7 @@ class CourseContent extends Component {
             }
 
             const { title, upload } = values;
-            const chapter = { title, courseId: this.props.currentCourse.id }
+            const chapter = { title, courseId: this.props.currentCourse.id, video_url: this.state.video_url }
             form.resetFields();
             this.props.dispatch(courseActions.createChapter(chapter));
             this.setState({ visible: false })
@@ -96,6 +81,24 @@ class CourseContent extends Component {
         }
         this.props.dispatch(courseActions.updateChapter(currentChapter.course_id, chapter))
     }
+
+    uploadVideoToCloud = async (e, currentChapter) => { 
+        this.setState({
+            uploading: true
+        })
+        debugger
+        const files = e.target.files;
+        const data = new FormData();
+        data.append('file', files[0]);
+        data.append('upload_preset', 'blqkxy0o')
+        const res = await fetch("https://api.cloudinary.com/v1_1/dmdtwsdi7/upload", { method: 'POST', body: data }) 
+        const a = await this.handleResponse(res);
+        this.setState({
+            video_url: a.secure_url,
+            uploading: false
+        })
+        // this.props.dispatch(courseActions.updateChapter(currentChapter.course_id, chapter))
+    }
     handleResponse(response) { 
         return response.text().then((text) => { 
             const data = text && JSON.parse(text); 
@@ -135,7 +138,8 @@ class CourseContent extends Component {
                         visible={this.state.visible}
                         onCancel={this.handleCancel}
                         onCreate={this.handleCreate}
-                        uploadVideo={this.uploadVideo}
+                        uploading={this.state.uploading}
+                        uploadVideoToCloud={this.uploadVideoToCloud}
                     />
                 </Col>
             </Row>

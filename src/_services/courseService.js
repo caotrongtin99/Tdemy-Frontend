@@ -215,7 +215,6 @@ function getStudentWishList(id) {
   return fetch(`${API_URL}/api/wishlist/`,requestOptions)
     .then(handleResponse)
     .then((res) => {
-      console.log("=========res from service =============", res);
       return res.data;
     });
 }
