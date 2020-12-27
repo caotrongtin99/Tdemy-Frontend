@@ -1,4 +1,4 @@
-import { Card, Row, Col, Button, Icon, E, message } from 'antd';
+import { Card, Row, Col, Button, Icon, E, message, Spin } from 'antd';
 import CollectionCreateForm from './CollectionCreateForm';
 import React, { Component } from 'react'
 
@@ -18,7 +18,8 @@ class CourseContent extends Component {
             visible: false,
             title: '',
             video_url: '',
-            uploading: false
+            uploading: false,
+            isUpdating: false
         };
     }
 
@@ -39,6 +40,7 @@ class CourseContent extends Component {
 
             const { title, upload } = values;
             const chapter = { title, courseId: this.props.currentCourse.id, video_url: this.state.video_url }
+            debugger
             form.resetFields();
             this.props.dispatch(courseActions.createChapter(chapter));
             this.setState({ visible: false })
@@ -68,12 +70,18 @@ class CourseContent extends Component {
     };
 
     uploadVideo = async (e, currentChapter) => { 
+        this.setState({
+            isUpdating: true
+        })
         const files = e.target.files;
         const data = new FormData();
         data.append('file', files[0]);
         data.append('upload_preset', 'blqkxy0o')
         const res = await fetch("https://api.cloudinary.com/v1_1/dmdtwsdi7/upload", { method: 'POST', body: data }) 
         const a = await this.handleResponse(res);
+        this.setState({
+            isUpdating: false
+        })
         const chapter = {
             id: currentChapter.id,
             video_url: a.secure_url,
@@ -114,7 +122,9 @@ class CourseContent extends Component {
 
     render() {
         const { chapters } = this.props.currentCourse;
+        const {isUpdating} = this.state;
         return (
+            <Spin spinning={isUpdating}>
             <Row type="flex" justify="center">
                 <Col span={18}>
                     <Row style={{ marginBottom: '20px' }} type="flex" justify="space-between">
@@ -143,6 +153,7 @@ class CourseContent extends Component {
                     />
                 </Col>
             </Row>
+            </Spin>
         );
     }
 }

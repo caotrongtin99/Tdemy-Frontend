@@ -126,6 +126,7 @@ async function getMostViewCourses() {
 async function createChapter(chapter) {
     const res = await axios.post(`${API_URL}/api/courses/${chapter.courseId}/chapters`, {
         title: chapter.title,
+        video_url: chapter.video_url,
         status: 0,
         duration: 123
     }, {

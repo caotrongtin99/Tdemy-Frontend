@@ -99,16 +99,16 @@ class Navbar extends Component {
         );
         const menu = (
             <Menu>
-              <Menu.Item key="0">
-                <a onClick={this.handleClickInfomation}>Your Infomation</a>
+              <Menu.Item key="0" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="user" /><a onClick={this.handleClickInfomation}>Your Infomation</a>
               </Menu.Item>
-              <Menu.Item key="1">
-                <a onClick={()=> history.push('/course/my-courses')}>Your Course</a>
+              <Menu.Item key="1" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="video-camera" />  <a onClick={()=> history.push('/course/my-courses')}>Your Course</a>
               </Menu.Item>
-              <Menu.Item key="3">
-                <a onClick={()=> history.push('/course/my-wishlist')}>My Wishlist</a>
+              <Menu.Item key="3" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="heart" /><a onClick={()=> history.push('/course/my-wishlist')}>My Wishlist</a>
               </Menu.Item>
-              <Menu.Item key="3">Payment History</Menu.Item>
+              <Menu.Item key="3"><Icon type="pay-circle" />Payment History</Menu.Item>
               <Menu.Divider />
               <Menu.Item key="3" onClick={this.handleLogout}>Log out</Menu.Item>
             </Menu>
@@ -177,12 +177,13 @@ class Navbar extends Component {
                                     <Popover content={content} title="Cart">
                                         <Button style={{ marginRight: '15px'}}><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
                                     </Popover>}
-                                    <Popover content={notifications} title="Notification">
+                                    <Popover content={notifications} title="Notification" style={{ marginRight: '20px'}}>
                                         <Button style={{ marginRight: '15px'}}><Badge count={99} overflowCount={10}><Icon style={{ fontSize: '20px' }} type="bell" /></Badge></Button>
                                     </Popover>
+                                    <span style={{ fontSize: '12px', fontWeight: 'bold', marginRight: '10px'}}>Hi, {this.props.user.name.split(' ')[0]}</span>
                                     <Dropdown overlay={menu} trigger={['click']} style={{ marginLeft: '15px'}}>
                                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{this.props.user.name && <span>{this.props.user.name}</span>}<Icon type="down" />
+                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /><Icon type="down" />
                                         </a>
                                     </Dropdown>
                                 </Row>
