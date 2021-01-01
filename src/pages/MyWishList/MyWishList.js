@@ -49,7 +49,7 @@ class MyWishList extends Component {
                             dataSource={courses}
                             renderItem={course=> (
                               <List.Item>
-                                    <CourseCard course={course} match={this.props.match}/>
+                                    <CourseCard course={course.Course} match={this.props.match}/>
                               </List.Item>
                             )}
                           /> : <Empty />
@@ -63,7 +63,7 @@ class MyWishList extends Component {
 
 const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
-    courses: state.studentCourse.data.courses,
+    courses: state.studentCourse.data.wishlists,
     user: state.userProfile.data
 })
 

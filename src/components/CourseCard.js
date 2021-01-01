@@ -20,14 +20,12 @@ class CourseCard extends Component {
     componentDidMount = () => {
         if (this.props.isLoggedIn){
             const {user} = this.props;
-            debugger
             this.props.dispatch(courseActions.getStudentCourses(user.id))
         }
     }
 
     addToCard = (course) => {
         const {myCourses} = this.props;
-        debugger
         this.props.dispatch(cartActions.addToCart(course));
         notification.success({
             message: 'Cart Notification',
@@ -36,7 +34,6 @@ class CourseCard extends Component {
     }
 
     handleAddWishList = (course) => {
-        debugger
         const a = this.props.isLoggedIn;
         if (this.props.isLoggedIn) {
             this.props.dispatch(courseActions.addToWishList(course.id))

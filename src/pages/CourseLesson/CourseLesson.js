@@ -14,12 +14,17 @@ class CourseLesson extends Component {
 
     componentDidMount = () => {
         const { match } = this.props;
-        debugger
         this.props.dispatch(courseActions.getCourseDetail(match.params.id));
     }
 
-    handlePlayLesson = (chapter) => {
+    componentWillUnmount = () => {
+        const { match } = this.props;
+        const currentTime = this.player.getCurrentTime();
         debugger
+        this.props.dispatch(courseActions.saveSession(match.params.id));
+    }
+
+    handlePlayLesson = (chapter) => {
         this.setState({
             currentChapter: chapter
         })

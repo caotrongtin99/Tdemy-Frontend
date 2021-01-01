@@ -8,6 +8,8 @@ import logo from '../static/images/logo.svg'
 import {userActions}  from '../actions/userActions'
 import './Navbar.css';
 import { cartActions } from '../actions/cartActions';
+import {config} from '../_constants/api';
+const {API_URL} = config;
 const { SubMenu } = Menu;
 const { Header } = Layout;
 const { Search } = Input;
@@ -18,9 +20,47 @@ class Navbar extends Component {
             value: '',
             showModal: false,
             loading: false,
-            error: null
+            error: null,
+            categoryList: []
         }
     }
+
+    componentDidMount = () => {
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+            }
+        };
+
+        fetch(`${API_URL}/api/category/tree`, requestOptions)
+            .then(async (res) => {
+                const data = await this.handleResponse(res);
+                const categoryList = data.data.rows;
+                this.setState({
+                    categoryList
+                })
+            });
+    }
+
+    handleResponse = (response) => {
+        return response.text().then((text) => {
+            const data = text && JSON.parse(text);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.reload(true);
+                }
+
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
+            }
+
+            return data;
+        });
+    }
+
     openModal() {
         this.setState({
             showModal: true
@@ -134,20 +174,21 @@ class Navbar extends Component {
                                                 display: 'block'
                                             }
                                         } key="sub2" title={<b><Icon type="appstore" />Categories</b>}>
-                                            <Menu.Item key="5">Digital Marketing</Menu.Item>
-                                            <Menu.Item key="6">IT - Software</Menu.Item>
-                                            <SubMenu key="sub3" title="IT - Software">
-                                                <Menu.Item key="7">Mobile Development</Menu.Item>
-                                                <Menu.Item key="8">Web Development</Menu.Item>
-                                                <Menu.Item key="8">Game Development</Menu.Item>
-                                            </SubMenu>
-                                            <Menu.Item key="6">Finance</Menu.Item>
-                                            <Menu.Item key="6">Design</Menu.Item>
+                                            {this.state.categoryList.map(category => {
+                                                if (category.subCount === 0) {
+                                                    return <Menu.Item key={category.name}>{category.name}</Menu.Item>
+                                                }
+                                                return (
+                                                    <SubMenu key={category.name} title={category.name}>
+                                                        {category.subCat.map(subCategory=> <Menu.Item key={subCategory.name}>{subCategory.name}</Menu.Item>)}
+                                                    </SubMenu>
+                                                )
+                                            })}
                                         </SubMenu>
                                     </Menu>
                                 </Col>
                                 <Col span={10} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Search placeholder="Search for anything" onSearch={value => console.log(value)} enterButton />
+                                    <Search placeholder="Search for anything" onSearch={(value)=> history.push(`/courses/search?key=${value}`)} enterButton />
                                 </Col>
                             </Row>
                         }

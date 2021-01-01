@@ -14,8 +14,26 @@ export const courseService = {
     deleteCourse,
     createEnroll,
     addToWishList,
-    getStudentWishList
+    getStudentWishList,
+    createSession,
 };
+
+function createSession(session) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(session),
+  };
+
+  return fetch(`${API_URL}/api/session/${session.chapterId}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      
+      return res.data;
+    });
+}
 
 function createCourse(course) {
   const requestOptions = {
@@ -196,11 +214,10 @@ function addToWishList(courseId) {
   return fetch(`${API_URL}/api/wishlist`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-      debugger
       if (res.result === 0){
         return res.data;
       } else {
-        notification.error({message: 'Error!!!'})
+        // notification.error({message: 'Error!!!'})
       }
     });
 }
@@ -216,11 +233,11 @@ function getStudentWishList(id) {
   return fetch(`${API_URL}/api/wishlist/`,requestOptions)
     .then(handleResponse)
     .then((res) => {
-      return res.data;
+      debugger
+      return res.data.array;
     });
 }
 function handleResponse(response) {
-  debugger
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
     if (!response.ok) {

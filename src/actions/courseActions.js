@@ -6,6 +6,7 @@ import { history } from "../_helpers/history";
 import { notification } from "antd";
 
 export const courseActions = {
+    saveSession,
     createCourse,
     updateCourse,
     getCourseDetail,
@@ -19,6 +20,12 @@ export const courseActions = {
     addToWishList,
     getStudentWishList
 };
+
+function saveSession(session) {
+    return (dispatch) => {
+
+    }
+}
 
 function createCourse(course) {
     
@@ -132,12 +139,15 @@ function createEnroll(courseIds) {
 }
 
 function addToWishList(courseId) {
-    debugger
     return (dispatch) => {
         courseService.addToWishList(courseId)
             .then(data => {
-                debugger
-                    // dispatch({ type: 'addMyCourses', data: data.array})
+                    if (!data) {
+                        notification.error({
+                            message: 'Error',
+                            description: 'You had it in wishlist before'
+                        })
+                    }
                     })
     }
 }
@@ -146,7 +156,7 @@ function getStudentWishList() {
     return (dispatch) => {
         courseService.getStudentWishList()
         .then(data => {
-            // dispatch({ type: 'getMostViewCourses', data: data})
+            dispatch({ type: 'getStudentWishlist', data: data})
         })
     };
 }

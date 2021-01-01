@@ -13,7 +13,8 @@ import MostViewCourses from '../../components/MostViewCourses';
 
 class HomePage extends Component {
     componentDidMount = () => {
-        this.props.dispatch(courseActions.getMostViewCourses())
+        this.props.dispatch(courseActions.getMostViewCourses());
+        // this.props.dispatch(courseActions.getNewCourses());
     }
     render() {
         return (

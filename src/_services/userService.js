@@ -77,7 +77,6 @@ function createComment(feedback) {
   return fetch(`${API_URL}/api/courses/${id}/feedback`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-      
       return res.data;
     });
 }

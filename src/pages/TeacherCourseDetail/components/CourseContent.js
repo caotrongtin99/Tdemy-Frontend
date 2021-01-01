@@ -40,7 +40,6 @@ class CourseContent extends Component {
 
             const { title, upload } = values;
             const chapter = { title, courseId: this.props.currentCourse.id, video_url: this.state.video_url }
-            debugger
             form.resetFields();
             this.props.dispatch(courseActions.createChapter(chapter));
             this.setState({ visible: false })
@@ -94,7 +93,6 @@ class CourseContent extends Component {
         this.setState({
             uploading: true
         })
-        debugger
         const files = e.target.files;
         const data = new FormData();
         data.append('file', files[0]);

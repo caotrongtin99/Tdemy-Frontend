@@ -4,7 +4,8 @@ import { Icon, Row, Col, Input, Button, PageHeader, Select } from 'antd'
 import {courseActions} from '../../actions/courseActions'
 import { history } from '../../_helpers/history';
 import { Steps } from 'antd';
-
+import {config} from '../../_constants/api';
+const {API_URL} = config;
 const { Step } = Steps;
 const { Option } = Select;
 
@@ -14,9 +15,46 @@ class CreateCourse extends Component {
         this.state = {
             step: 0,
             name: '',
-            category: 'Web Development',
-            description: ''
+            categories: [],
+            description: '',
+            categoryList: []
         }
+    }
+
+    componentDidMount = () => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+            }
+        };
+
+        fetch(`${API_URL}/api/category`, requestOptions)
+            .then(async (res) => {
+                const data = await this.handleResponse(res);
+                const categoryList = data.data.rows;
+                this.setState({
+                    categoryList
+                })
+            });
+    }
+
+    handleResponse = (response) => {
+        return response.text().then((text) => {
+            const data = text && JSON.parse(text);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.reload(true);
+                }
+
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
+            }
+
+            return data;
+        });
     }
 
     handleSearch = (e) => {
@@ -34,15 +72,17 @@ class CreateCourse extends Component {
     handleCreateCourse = _ => {
         const course = {
             name: this.state.name,
-            category: [this.state.category],
+            category: [this.state.categories],
             short_description: this.state.description,
         }
+        debugger
         this.props.dispatch(courseActions.createCourse(course))
     }
 
     onChangeCategory (e) {
+        debugger
         this.setState({
-            category: e
+            categories: e
         })
     }
 
@@ -59,6 +99,7 @@ class CreateCourse extends Component {
     }
     render() {
         const { step } = this.state;
+        console.log("-=----- this.state.category ======", this.state.categories)
         return (
             <div className='teacher-dashboard'>
                 <div className="main-content-teacher-course">
@@ -94,10 +135,8 @@ class CreateCourse extends Component {
                                 </Row>
                                 <Row type="flex" justify="center" style={{ marginTop: '60px' }}>
                                     <Col span={14}>
-                                        <Select defaultValue="Game Development" onChange={(value) => this.onChangeCategory(value)} style={{ width: '100%'}}>
-                                            <Option value="Mobile Development">Mobile Development</Option>
-                                            <Option value="Web Development">Web Development</Option>
-                                            <Option value="Game Development">Game Development</Option>
+                                        <Select mode="multiple" onChange={(value) => this.onChangeCategory(value)} defaultValue={[]} style={{ width: '100%'}}>
+                                            {this.state.categoryList.map(category => <Option value={category.name}>{category.name}</Option>)}
                                         </Select>
                                     </Col>
                                 </Row>

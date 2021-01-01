@@ -1,5 +1,5 @@
 import React from 'react';
-import { Comment, Avatar, Form, Button, List, Input } from 'antd';
+import { Comment, Icon, Form, Button, List, Input, Rate } from 'antd';
 
 const { TextArea } = Input;
 
@@ -8,7 +8,7 @@ const CommentList = ({ comments }) => (
     dataSource={comments}
     header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
     itemLayout="horizontal"
-    renderItem={props => <Comment {...props} />}
+    renderItem={props => <Comment {...props} actions={[<Rate character={<Icon type="heart" />} value={props.rating} allowHalf />]} />}
   />
 );
 
