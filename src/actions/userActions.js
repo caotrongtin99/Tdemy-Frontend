@@ -3,6 +3,7 @@ import { postConstants } from "../_constants/postConstants";
 import { userService } from "../_services/userService";
 import { alertActions } from "./alertActions";
 import { history } from "../_helpers/history";
+import { notification } from "antd";
 
 export const userActions = {
   login,
@@ -11,6 +12,7 @@ export const userActions = {
   sendVerificationEmail,
   getUserData,
   updateUserData,
+  updateUserPassword,
   sendforgotPasswordEmail,
   getUserProfileData,
   getNewUsers,
@@ -192,19 +194,58 @@ function saveUserData(user) {
   }
 }
 
-function updateUserData(user) {
+function updateUserPassword(user) {
   return (dispatch) => {
     dispatch(request());
 
-    // userService.updateUser(user).then(
-    //   (data) => {
-    //     dispatch(success(data.user));
-    //   },
-    //   (error) => {
-    //     dispatch(failure(error.toString()));
-    //     //dispatch(alertActions.error(error.toString()));
-    //   }
-    // );
+    userService.updateUserPassword(user).then(
+      (data) => {
+        if(data.result !== 0) {
+          notification.error({
+            message: 'Update password Notification!',
+            description: 'Update User password Failed'
+          })
+        } else {
+          dispatch({ type: 'updateUserPassword', user})
+        }
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+      }
+    )
+  };
+
+  function request() {
+    return { type: userConstants.USER_UPDATE_REQUEST };
+  }
+  function success(user) {
+    return { type: userConstants.USER_UPDATE_SUCCESS, user };
+  }
+  function failure(error) {
+    return { type: userConstants.USER_UPDATE_FAILURE, error };
+  }
+}
+
+function updateUserData(user, id) {
+  return (dispatch) => {
+    dispatch(request());
+
+    userService.updateUser(user, id).then(
+      (data) => {
+        if (data.result !== 0) {
+          notification.error({
+            message: 'Update Notification!',
+            description: 'Update User Failed'
+          })
+        } else {
+          dispatch({ type: 'updateUser', user})
+        }
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        //dispatch(alertActions.error(error.toString()));
+      }
+    );
   };
 
   function request() {

@@ -1,13 +1,50 @@
-import {config} from '../_constants/api';
-const {API_URL} = config;
+import { config } from '../_constants/api';
+const { API_URL } = config;
 export const userService = {
   login,
   logout,
   sendVerificationEmail,
   sendforgotPasswordEmail,
   register,
-  createComment
+  createComment,
+  updateUser,
+  updateUserPassword
 };
+
+function updateUserPassword(user) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-access-token": localStorage.getItem('token'),
+      "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    body: JSON.stringify(user),
+  }
+  return fetch(`${API_URL}/api/users/changepassword`, requestOptions)
+    .then(handleResponse)
+    .then(res => {
+      return res;
+    })
+}
+
+function updateUser(user, id) {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-access-token": localStorage.getItem('token'),
+      "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    body: JSON.stringify(user),
+  }
+
+  return fetch(`${API_URL}/api/users/${id}`, requestOptions)
+    .then(handleResponse)
+    .then(res => {
+      return res;
+    })
+}
 
 
 function login(email, password, accessToken, refreshToken) {
@@ -68,16 +105,18 @@ function createComment(feedback) {
   delete feedback.id;
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json",
-    "x-access-token": localStorage.getItem('token'),
-    "x-refresh-token": localStorage.getItem('ref_token') },
+    headers: {
+      "Content-Type": "application/json",
+      "x-access-token": localStorage.getItem('token'),
+      "x-refresh-token": localStorage.getItem('ref_token')
+    },
     body: JSON.stringify(feedback),
   };
 
   return fetch(`${API_URL}/api/courses/${id}/feedback`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-      
+
       return res.data;
     });
 }
