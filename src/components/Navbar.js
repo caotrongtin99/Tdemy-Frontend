@@ -125,7 +125,7 @@ class Navbar extends Component {
         const content = (
             <div>
                 {carts.length > 0 ? carts.map(course => <div style={{ cursor: 'pointer',display: 'flex', justifyContent: "space-between", alignItems: 'center', marginBottom: '5px'}}>
-                    <img src={course.avatar} style={{width: '45px', height: '45px', marginRight: '20px'}}/>
+                    <img src={course.avatar_url} style={{width: '45px', height: '45px', marginRight: '20px'}}/>
                     <p >{course.name}</p>
                     <p style={{ marginLeft: '20px'}}>{course.fee}$</p>
                 </div>) : <Empty description="Empty Cart"/>}
@@ -179,8 +179,8 @@ class Navbar extends Component {
                                                     return <Menu.Item key={category.name}>{category.name}</Menu.Item>
                                                 }
                                                 return (
-                                                    <SubMenu key={category.name} title={category.name}>
-                                                        {category.subCat.map(subCategory=> <Menu.Item key={subCategory.name}>{subCategory.name}</Menu.Item>)}
+                                                    <SubMenu key={category.name} title={category.name} onTitleClick={() => history.push(`/category/${category.name}`)}>
+                                                        {category.subCat.map(subCategory=> <Menu.Item onClick={() => history.push(`/category/${subCategory.name}`)} key={subCategory.name}>{subCategory.name}</Menu.Item>)}
                                                     </SubMenu>
                                                 )
                                             })}

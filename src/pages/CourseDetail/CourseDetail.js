@@ -11,6 +11,7 @@ import { courseActions } from '../../actions/courseActions';
 import { cartActions } from '../../actions/cartActions';
 import { commentActions } from '../../actions/commentActions';
 import './style.css';
+import rateFormater from '../../utils/ratingFormater';
 import CommentList from '../../components/CommentList';
 const { Paragraph } = Typography;
 const { TextArea } = Input;
@@ -115,10 +116,10 @@ class CourseDetail extends Component {
           })
       }
     render() {
-        const { course } = this.props;
+        const { course, user } = this.props;
         const { isOpen, videoUrl, list, data, submitting, value } = this.state;
         const courseFeedbacks = course.feedback || [];
-        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: _.get(feedback,'User.name') || '', content: feedback.comment, avatar: _.get(feedback, 'User.avatar_url') || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment().fromNow()}));
+        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: _.get(feedback,'User.name') || '', content: feedback.comment, avatar: _.get(feedback, 'User.avatar_url') || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment(feedback.createdAt).fromNow()}));
         const Editor = ({ onChange, onSubmit, submitting, value }) => (
             <div>
               <Form.Item>
@@ -182,7 +183,7 @@ class CourseDetail extends Component {
         const content = (
             <div className="content">
                 <Row type="flex" style={{ alignItems: 'center' }}>
-                    <Rate value={course.rate || 0} character={<Icon type="heart" />} allowHalf disabled /> <p style={{ marginLeft: '15px' }}>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
+                    <Rate value={rateFormater(course.rate) || 0} character={<Icon type="heart" />} allowHalf disabled /> <p style={{ marginLeft: '15px' }}>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
                 </Row>
                 <Paragraph>
                     {course.short_description}
@@ -294,7 +295,7 @@ class CourseDetail extends Component {
                                 <Comment
                                     avatar={
                                         <Avatar
-                                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                            src={_.get(user, 'avatar_url')}
                                             alt="Han Solo"
                                         />
                                     }
@@ -325,6 +326,7 @@ class CourseDetail extends Component {
 
 const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
+    user: state.authentication.user,
     course: state.teacherCourse.data.currentCourse,
     cartItems: state.cart.carts
 })

@@ -9,6 +9,7 @@ import Organization from '../../static/images/organization.png';
 import HotCourses from '../../components/HotCourses';
 import { courseActions } from '../../actions/courseActions';
 import MostViewCourses from '../../components/MostViewCourses';
+import NewCourses from '../../components/NewCourses';
 // import HotCourses from '../../components/HotCourses';
 
 class HomePage extends Component {
@@ -83,19 +84,35 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                 </Row>
-                <Row type="flex" justify="center">
+                {/* <Row type="flex" justify="center">
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>What to learn next</h2>
                     <Row style={{ paddingBottom: '100px'}}>
                         <HotCourses/>
                     </Row>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row type="flex" justify="center">
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Most View Courses</h2>
                     <Row style={{ paddingBottom: '100px'}}>
                         <MostViewCourses/>
+                    </Row>
+                    </Col>
+                </Row>
+                <Row type="flex" justify="center">
+                    <Col span={22} style={{ margin: '0 auto'}}>
+                    <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>New Courses</h2>
+                    <Row style={{ paddingBottom: '100px'}}>
+                        <NewCourses/>
+                    </Row>
+                    </Col>
+                </Row>
+                <Row type="flex" justify="center">
+                    <Col span={22} style={{ margin: '0 auto'}}>
+                    <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Hot Courses</h2>
+                    <Row style={{ paddingBottom: '100px'}}>
+                        <HotCourses/>
                     </Row>
                     </Col>
                 </Row>

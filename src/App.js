@@ -16,6 +16,8 @@ import TeacherCourse from './pages/TeacherCourse/TeacherCourse';
 import CreateCourse from './pages/CreateCourse/CreateCourse';
 import TeacherCourseDetail from './pages/TeacherCourseDetail';
 import LoginPage from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import NewPassword from './pages/NewPassword/NewPassword';
 import Footer from 'rc-footer';
 import 'rc-footer/assets/index.css';
 import Cart from './pages/Cart/Cart';
@@ -24,6 +26,8 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import MyCourses from './pages/MyCourses/MyCourses';
 import CourseLesson from './pages/CourseLesson/CourseLesson';
 import MyWishList from './pages/MyWishList/MyWishList';
+import CategoryCourses from './pages/CategoryCourses/CategoryCourses';
+import ActiveAccount from './pages/ActiveAccount/ActiveAccount';
 
 class App extends React.Component {
   componentWillMount() {
@@ -49,6 +53,15 @@ class App extends React.Component {
                 <Route exact path='/login'>
                   {isLoggedIn ? <Redirect to="/" /> : <LoginPage />}
                 </Route>
+                <Route exact path='/forgot-password'>
+                  {isLoggedIn ? <Redirect to="/" /> : <ForgotPassword />}
+                </Route>
+                <Route exact path='/confirm'>
+                  {isLoggedIn ? <Redirect to="/" /> : <NewPassword />}
+                </Route>
+                <Route exact path='/active'>
+                  {isLoggedIn ? <Redirect to="/" /> : <ActiveAccount />}
+                </Route>
                 <Route exact path='/cart' component={Cart} />
                 <Route exact path='/account' component={AccountPage}>
                   {isLoggedIn ? <Redirect to="/login" /> : <AccountPage />}
@@ -73,6 +86,7 @@ class App extends React.Component {
                 </Route>
                 <Route exact path='/course/:id' component={CourseDetail} />
                 <Route exact path='/courses/search' component={SearchPage} />
+                <Route exact path='/category/:category' component={CategoryCourses} />
                 <Route exact path='/teacher/course/manage/:id' component={TeacherCourseDetail} />
               </Switch>
               <Footer

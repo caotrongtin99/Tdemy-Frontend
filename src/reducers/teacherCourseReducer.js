@@ -51,11 +51,9 @@ export function teacherCourse(state = initialState, action) {
                 data: { ...state.data, ...newData }
             }
         case "saveChapter":
-            console.log("========new chapter ===========", action.data)
-            console.log("========add chapter======", { ...state.data, currentCourse: {...state.data.currentCourse, chapters: [...state.data.currentCourse.chapters,action.data]} })
             return {
                 ...state,
-                data: { ...state.data, currentCourse: {...state.data.commentConstantscurrentCourse, chapters: [...state.data.currentCourse.chapters,action.data]} }
+                data: { ...state.data, currentCourse: {...state.data.currentCourse, chapters: [...state.data.currentCourse.chapters,action.data]} }
             }
         default:
             return state;

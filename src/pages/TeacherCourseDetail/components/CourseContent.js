@@ -41,6 +41,7 @@ class CourseContent extends Component {
             const { title, upload } = values;
             const chapter = { title, courseId: this.props.currentCourse.id, video_url: this.state.video_url }
             form.resetFields();
+            debugger
             this.props.dispatch(courseActions.createChapter(chapter));
             this.setState({ visible: false })
         });
@@ -139,7 +140,8 @@ class CourseContent extends Component {
                         <Button style={{ marginLeft: '30px'}} onClick={() => this.updateChapterStatus(chapter.status, chapter)}>{chapter.status === 0 ? 'Make Private' : 'Make Public'}</Button>
                     </>
                     }>
-                        {chapter.video_url && <Icon type="file-image" />} <p> {chapter.video_url}</p> <input type="file" placeholder="choose video" name="file" onChange={(e) => this.uploadVideo(e, chapter)} />
+                        {chapter.video_url && <Icon type="file-image" />} <p> {chapter.video_url}</p> 
+                        <input type="file" placeholder="choose video" name="file" onChange={(e) => this.uploadVideo(e, chapter)} />
                     </Card>)}
                     <CollectionCreateForm
                         wrappedComponentRef={this.saveFormRef}
