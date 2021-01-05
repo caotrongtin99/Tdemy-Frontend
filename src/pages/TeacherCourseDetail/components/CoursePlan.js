@@ -29,6 +29,7 @@ function getBase64(img, callback) {
 class CoursePlan extends Component {
     state = {
         loading: false,
+        uploading: false,
         imageUrl: this.props.currentCourse.avatar_url
     }
     componentDidMount = () => {
@@ -52,11 +53,12 @@ class CoursePlan extends Component {
     };
 
     handleUploadImage = async (file) => {
-        const image = imageToBase64(file);
+        this.setState({ uploading : true})
         getBase64(file, async(imageURL) => {
             const result = await upload(imageURL);
             this.setState({
-                imageUrl:  result.url
+                imageUrl:  result.url,
+                uploading: false
             })
         })
     }
@@ -82,7 +84,7 @@ class CoursePlan extends Component {
     render() {
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const { alert, currentCourse } = this.props;
-        const {imageUrl} = this.state;
+        const {imageUrl, uploading} = this.state;
         
         const uploadButton = (
             <div>
@@ -91,6 +93,7 @@ class CoursePlan extends Component {
             </div>
         );
         return (
+            <Spin spinning={uploading}>
             <Form layout="inline" onSubmit={this.handleSubmit}>
                 <Row>
                     <Form.Item label="Avatar">
@@ -126,6 +129,7 @@ class CoursePlan extends Component {
                     Save
                 </Button>
             </Form>
+            </Spin>
         );
     }
 }

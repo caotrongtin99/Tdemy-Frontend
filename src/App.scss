@@ -1,4 +1,6 @@
 @import '~antd/dist/antd.css';
+@import 'node_modules/react-modal-video/scss/modal-video.scss';
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,700;1,500&display=swap');
 
 /* .ant-layout {
     background-color: #ffffff;
@@ -6,6 +8,7 @@
 
 .App {
     background-color: #f0f2f5;
+    // font-family: 'Cabin';
 }
 
 .main-content-teacher {

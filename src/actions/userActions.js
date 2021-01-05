@@ -3,6 +3,7 @@ import { postConstants } from "../_constants/postConstants";
 import { userService } from "../_services/userService";
 import { alertActions } from "./alertActions";
 import { history } from "../_helpers/history";
+import { notification } from "antd";
 
 export const userActions = {
   login,
@@ -103,12 +104,19 @@ function login(email, password, accessToken, refreshToken) {
     
     userService.login(email, password).then(
       (data) => {
-        dispatch(userActions.saveUserData(data))
-        dispatch(success(data))
-        history.push("/");
+        if (!data){
+          notification.error({
+            message: 'Login Fail!'
+          })
+        } else {
+          dispatch(userActions.saveUserData(data))
+          localStorage.setItem("token", data.accessToken);
+          localStorage.setItem("ref_token", data.ref_token);
+          dispatch(success(data))
+          history.push("/");
+        }
       },
       (error) => {
-         
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
       }

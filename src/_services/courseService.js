@@ -12,8 +12,29 @@ export const courseService = {
     getStudentCourses,
     getMostViewCourses,
     deleteCourse,
-    createEnroll
+    createEnroll,
+    addToWishList,
+    getStudentWishList,
+    createSession,
+    removeItemInWishlist
 };
+
+function createSession(session) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(session),
+  };
+
+  return fetch(`${API_URL}/api/session/${session.chapterId}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      
+      return res.data;
+    });
+}
 
 function createCourse(course) {
   const requestOptions = {
@@ -69,12 +90,30 @@ function deleteCourse(course) {
     });
 }
 
+function removeItemInWishlist(course_id) {
+  debugger
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    body: JSON.stringify({course_id: course_id})
+  };
+
+  return fetch(`${API_URL}/api/wishlist`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      return res.result;
+    });
+}
+
 function getCourseDetail(id) {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json",
-        //"x-access-token": localStorage.getItem('token'),
-        //"x-refresh-token": localStorage.getItem('ref_token')
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
     },
     };
   return fetch(`${API_URL}/api/courses/${id}`,requestOptions)
@@ -124,6 +163,7 @@ async function getMostViewCourses() {
 async function createChapter(chapter) {
     const res = await axios.post(`${API_URL}/api/courses/${chapter.courseId}/chapters`, {
         title: chapter.title,
+        video_url: chapter.video_url,
         status: 0,
         duration: 123
     }, {
@@ -180,6 +220,42 @@ function createEnroll(courseIds) {
     });
 }
 
+function addToWishList(courseId) {
+  const data = {course_id: courseId}
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token') },
+    body: JSON.stringify(data),
+  };
+
+  return fetch(`${API_URL}/api/wishlist`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      if (res.result === 0){
+        return res.data;
+      } else {
+        // notification.error({message: 'Error!!!'})
+      }
+    });
+}
+
+function getStudentWishList(id) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    };
+  return fetch(`${API_URL}/api/wishlist/`,requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      debugger
+      return res.data.array;
+    });
+}
 function handleResponse(response) {
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
