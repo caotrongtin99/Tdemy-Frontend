@@ -18,7 +18,8 @@ export const courseActions = {
     deleteCourse,
     createEnroll,
     addToWishList,
-    getStudentWishList
+    getStudentWishList,
+    removeItemInWishlist
 };
 
 function saveSession(session) {
@@ -47,11 +48,9 @@ function createCourse(course) {
 function updateCourse(course) {
     const {id} = course;
     return (dispatch) => {
-        // dispatch({ type: 'creatCourse', course });
         courseService.updateCourse(course)
             .then(data => {
                 if (data[0] ==1){
-                    // dispatch(alertActions.success("Update course fee successfully!!"))
                     notification.success({
                         message: 'Update message',
                         description: 'Update Course successfully!'
@@ -73,6 +72,22 @@ function deleteCourse(course) {
                         description: 'Delete Course successfully!'
                     })
                     history.push('/teacher/course/')
+                }
+            })
+    };
+}
+
+function removeItemInWishlist(courseId) {
+    return (dispatch) => {
+        courseService.removeItemInWishlist(courseId)
+            .then(data => {
+                if (data === 0){
+                    debugger
+                    dispatch({ type: 'removeItemInWishlist', data: courseId});
+                } else {
+                    notification.error({
+                        message: 'Error!'
+                    })
                 }
             })
     };

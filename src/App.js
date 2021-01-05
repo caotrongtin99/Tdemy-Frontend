@@ -28,6 +28,8 @@ import CourseLesson from './pages/CourseLesson/CourseLesson';
 import MyWishList from './pages/MyWishList/MyWishList';
 import CategoryCourses from './pages/CategoryCourses/CategoryCourses';
 import ActiveAccount from './pages/ActiveAccount/ActiveAccount';
+import NotFound from './components/NotFound';
+import Page403 from './components/Page403';
 
 class App extends React.Component {
   componentWillMount() {
@@ -67,13 +69,13 @@ class App extends React.Component {
                   {isLoggedIn ? <Redirect to="/login" /> : <AccountPage />}
                 </Route>
                 <Route exact path='/teacher' >
-                  { isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <TeacherDashboard/>}
+                  { isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Page403 /> : <TeacherDashboard/>}
                 </Route>
                 <Route exact path='/teacher/course'>
-                  {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <TeacherCourse/>}
+                  {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Page403 /> : <TeacherCourse/>}
                 </Route>
                 <Route exact path='/teacher/course/create'>
-                {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Redirect to="/" />: <CreateCourse/>}
+                {isLoggedIn? <Redirect to="/login"/> : role === "student" ? <Page403 />: <CreateCourse/>}
                 </Route>
                 <Route exact path='/course/my-courses'>
                 {isLoggedIn? <Redirect to="/login"/> : role === "teacher" ? <Redirect to="/" />: <MyCourses />}
@@ -88,6 +90,7 @@ class App extends React.Component {
                 <Route exact path='/courses/search' component={SearchPage} />
                 <Route exact path='/category/:category' component={CategoryCourses} />
                 <Route exact path='/teacher/course/manage/:id' component={TeacherCourseDetail} />
+                <Route component={NotFound} />
               </Switch>
               <Footer
                 columns={[

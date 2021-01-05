@@ -15,15 +15,23 @@ class CourseCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isInWishList: this.props.course.isInWishList
+            isInWishList: false
         }
     }
 
     componentDidMount = () => {
         if (this.props.isLoggedIn){
-            const {user} = this.props;
+            const {user, course, wishlists} = this.props;
             this.props.dispatch(courseActions.getStudentCourses(user.id))
+            this.setState({
+                isInWishList: this.inWishlistChecker(course, wishlists)
+            }, () => console.log("=====", this.state.isInWishList))
         }
+    }
+
+    inWishlistChecker = (courseDetail, wishlist) => {
+        const courseFound = wishlist.find(course => course.Course.id === courseDetail.id);
+        return courseFound ? true : false;
     }
 
     addToCard = (course) => {
@@ -48,6 +56,9 @@ class CourseCard extends Component {
         const a = this.props.isLoggedIn;
         if (this.props.isLoggedIn) {
             this.props.dispatch(courseActions.addToWishList(course.id))
+            this.setState({
+                isInWishList: true
+            })
         } else {
             notification.warning({
                 message: 'Login Required!',
@@ -60,6 +71,10 @@ class CourseCard extends Component {
         const { match} = this.props;
         const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
         isMyCoursesPage ? history.push(`/course/my-courses/${course.id}`) : history.push(`/course/${course.id}`)
+    }
+
+    removeItemInWishlist = (course) => {
+        this.props.dispatch(courseActions.removeItemInWishlist([course.id]))
     }
 
     render() {
@@ -75,7 +90,7 @@ class CourseCard extends Component {
                         Add to cart
                     </Button>
                     <Heart isClick={this.state.isInWishList} onClick={() => this.handleAddWishList(course)} />
-                    {isWishlistPage && <Icon style={{ fontSize: '26px', color: 'red'}} type="delete" />}
+                    {isWishlistPage && <Icon onClick={() => this.removeItemInWishlist(course)} style={{ fontSize: '26px', color: 'red'}} type="delete" />}
                 </Row>}
             </div>
         );
@@ -109,7 +124,8 @@ const mapStateToProps = state => ({
     isLoggedIn: state.authentication.loggedIn,
     carts: state.cart.carts,
     user: state.authentication.user,
-    myCourses: state.studentCourse.data.myCourses
+    myCourses: state.studentCourse.data.myCourses,
+    wishlists: state.studentCourse.data.wishlists
 })
 
 export default withRouter(connect(mapStateToProps)(CourseCard));

@@ -15,7 +15,7 @@ import NewCourses from '../../components/NewCourses';
 class HomePage extends Component {
     componentDidMount = () => {
         this.props.dispatch(courseActions.getMostViewCourses());
-        // this.props.dispatch(courseActions.getNewCourses());
+        this.props.dispatch(courseActions.getStudentWishList());
     }
     render() {
         return (

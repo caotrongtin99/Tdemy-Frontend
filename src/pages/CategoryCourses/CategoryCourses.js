@@ -1,4 +1,4 @@
-import { Col, Row, Select } from 'antd'
+import { Col, Empty, Row, Select } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
 import queryString from 'query-string';
@@ -54,10 +54,9 @@ class CategoryCourses extends Component {
       }
 
     render() {
-        const {match, location} = this.props;
+        const {location} = this.props;
         const {courseList, category} = this.state;
-        let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        const listCoursesRender = courseList.map(course => <Col md={6} sm={24}><CourseCard course={course} /></Col>)
         return (
             <>
                 <Row type="flex" justify="center">
@@ -70,7 +69,7 @@ class CategoryCourses extends Component {
                         </Row>
                         <Row gutter={160}>
                         {
-                            courseList.map(course => <Col md={6} sm={24}><CourseCard course={course} /></Col>)
+                            courseList.length > 0 ?<div>{ listCoursesRender }</div>: <Empty style={{ padding: '100px 0'}}/>
                         }
                         </Row>
                         {/* <p style={{ fontSize: '14px' }}>Filter by:</p> */}

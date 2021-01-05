@@ -16,6 +16,7 @@ export const courseService = {
     addToWishList,
     getStudentWishList,
     createSession,
+    removeItemInWishlist
 };
 
 function createSession(session) {
@@ -83,6 +84,24 @@ function deleteCourse(course) {
   };
 
   return fetch(`${API_URL}/api/courses/${id}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      return res.result;
+    });
+}
+
+function removeItemInWishlist(course_id) {
+  debugger
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+    },
+    body: JSON.stringify({course_id: course_id})
+  };
+
+  return fetch(`${API_URL}/api/wishlist`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.result;

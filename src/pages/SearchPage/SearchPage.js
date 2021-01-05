@@ -74,7 +74,7 @@ class SearchPage extends Component {
                         }
                         </Row>
                         <Row type="flex" justify="center" style={{ marginBottom: '20px'}}>
-                            <Pagination defaultCurrent={1} total={500}/>
+                            <Pagination defaultCurrent={1} total={courseList.length}/>
                         </Row>
 
                     </Col>

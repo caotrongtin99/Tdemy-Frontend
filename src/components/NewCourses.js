@@ -14,11 +14,11 @@ class NewCourses extends Component {
         const responsive = {
             superLargeDesktop: {
                 // the naming can be any, depends on you.
-                breakpoint: { max: 4000, min: 3000 },
+                breakpoint: { max: 4000, min: 1800 },
                 items: 5
             },
             desktop: {
-                breakpoint: { max: 3000, min: 1024 },
+                breakpoint: { max: 1800, min: 1024 },
                 items: 4
             },
             tablet: {
