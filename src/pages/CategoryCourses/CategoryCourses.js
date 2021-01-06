@@ -1,4 +1,4 @@
-import { Col, Row, Select, Pagination } from 'antd'
+import { Col, Empty, Row, Select } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
 import queryString from 'query-string';
@@ -9,24 +9,28 @@ import CourseCard from '../../components/CourseCard';
 const {API_URL} = config;
 const { Option } = Select;
 
-class SearchPage extends Component {
+class CategoryCourses extends Component {
     state = {
-        courseList: []
+        courseList: [],
+        category: ''
     };
     componentDidMount = () => {
         const {match, location} = this.props;
-        let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        this.setState({
+            category: match.params.category
+        })
         const requestOptions = {
-            method: "GET",
+            method: "POST",
             headers: { "Content-Type": "application/json",
             "x-access-token": localStorage.getItem('token'),
             "x-refresh-token": localStorage.getItem('ref_token')
             },
+            body: JSON.stringify({ type: 'category', value: match.params.category}),
             };
-          return fetch(`${API_URL}/api/search?key=${key}&limit=10&offset=0`,requestOptions)
+          return fetch(`${API_URL}/api/courses`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
+              debugger
               this.setState({
                   courseList: res.data.array
               })
@@ -50,32 +54,25 @@ class SearchPage extends Component {
       }
 
     render() {
-        const {match, location} = this.props;
-        const {courseList} = this.state;
-        let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        const {location} = this.props;
+        const {courseList, category} = this.state;
+        const listCoursesRender = courseList.map(course => <Col md={6} sm={24}><CourseCard course={course} /></Col>)
         return (
             <>
                 <Row type="flex" justify="center">
                     <Col md={20} lg={18} style={{ marginTop: '30px' }}>
+                        <Row>
+                        <h2 style={{ fontWeight: 'bold', fontSize: '18px' }}>{category} Courses </h2>
+                        </Row>
                         <Row type="flex" justify="space-between" style={{ alignItems: 'center'}}>
-                            <h2 style={{ fontWeight: 'bold', fontSize: '18px' }}>{courseList.length} results for {key} </h2>
-                            {/* <div style={{ display: 'flex', alignItems: 'center'}}>
-                                <span style={{ fontSize: '18px', marginRight: '20px' }}>Sort by:</span>
-                                <Select defaultValue="lucy" style={{ width: 120 }}>
-                                    <Option value="jack">Rating</Option>
-                                    <Option value="lucy">Student</Option>
-                                </Select>
-                            </div> */}
+                            <h2 style={{ fontWeight: 'bold', fontSize: '14px' }}>{courseList.length} results for {category} </h2>
                         </Row>
                         <Row gutter={160}>
                         {
-                            courseList.map(course => <Col className="gutter-row" md={6} sm={24} ><CourseCard course={course} /></Col>)
+                            courseList.length > 0 ?<div>{ listCoursesRender }</div>: <Empty style={{ padding: '100px 0'}}/>
                         }
                         </Row>
-                        <Row type="flex" justify="center" style={{ marginBottom: '20px'}}>
-                            <Pagination defaultCurrent={1} total={courseList.length}/>
-                        </Row>
+                        {/* <p style={{ fontSize: '14px' }}>Filter by:</p> */}
 
                     </Col>
                 </Row>
@@ -90,4 +87,4 @@ const mapStateToProps = state => ({
     cartItems: state.cart.carts
 })
 
-export default connect(mapStateToProps)(SearchPage);
+export default connect(mapStateToProps)(CategoryCourses);

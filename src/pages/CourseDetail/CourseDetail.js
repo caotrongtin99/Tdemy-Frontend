@@ -1,35 +1,21 @@
-import { List, Col, Row, Button, Icon, Typography, PageHeader, notification, Skeleton, Avatar, Comment, Form, Input } from 'antd'
+import { List, Col, Row, Button, Icon, Typography, PageHeader, notification, Skeleton, Avatar, Comment, Form, Input, Rate } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
-import Rate from 'rc-rate';
 import Parser from 'html-react-parser';
 import moment from 'moment';
 import _ from 'lodash';
+import {FacebookShareButton, FacebookIcon} from 'react-share'
+import ModalVideo from 'react-modal-video'
 import { connect } from 'react-redux';
 import { courseActions } from '../../actions/courseActions';
 import { cartActions } from '../../actions/cartActions';
 import { commentActions } from '../../actions/commentActions';
-import { FloatingButton, Item } from "react-floating-button";
-import buyNowButton from '../../static/images/buy-button.svg'
-import cartButton from '../../static/images/cart.png'
-import ComponentList from '../../components/CommentList'
 import './style.css';
+import rateFormater from '../../utils/ratingFormater';
 import CommentList from '../../components/CommentList';
 const { Paragraph } = Typography;
 const { TextArea } = Input;
 const count = 2;
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
-    <div>
-      <Form.Item>
-        <TextArea rows={4} onChange={onChange} value={value} />
-      </Form.Item>
-      <Form.Item>
-        <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
-          Leave a feedback
-        </Button>
-      </Form.Item>
-    </div>
-  );
 class CourseDetail extends Component {
     state = {
         initLoading: true,
@@ -38,14 +24,15 @@ class CourseDetail extends Component {
         list: [],
         feedbacks: [],
         submitting: false,
-        value: ''
+        value: '',
+        isOpen: false,
+        videoUrl: '',
+        rating: 0
     };
 
     componentWillMount = async () => {
         const { match } = this.props;
-        console.log("===================1=======================")
         await this.props.dispatch(courseActions.getCourseDetail(match.params.id))
-        console.log("============2========================")
     }
 
     componentDidMount = () => {
@@ -60,7 +47,6 @@ class CourseDetail extends Component {
                 feedbacks: this.props.course.feedback
             })
         } else {
-            debugger
             this.props.dispatch(courseActions.getCourseDetail(match.params.id))
         }
     }
@@ -94,14 +80,19 @@ class CourseDetail extends Component {
         if (!this.state.value) {
           return;
         }
-    
+        if (!this.props.loggedIn) {
+            notification.warning({
+                message: 'Permission Notification!',
+                description: 'Please login to feedback about the course'
+            })        
+        }
         this.setState({
           submitting: true,
         });
         const feedback = {
             id: this.props.course.id,
             comment: this.state.value,
-            rating: 4
+            rating: this.state.rating
         }
         
         await this.props.dispatch(commentActions.createFeedback(feedback));
@@ -113,24 +104,37 @@ class CourseDetail extends Component {
       };
     
       handleChange = e => {
-        if (!this.props.loggedIn) {
-            notification.warning({
-                message: 'Permission Notification!',
-                description: 'Please login to feedback about the course'
-            })        
-        } else {
-            this.setState({
-            value: e.target.value,
-            });
-        }
+        this.setState({
+        value: e.target.value,
+        });
       };
-    render() {
-        const { course } = this.props;
-        const { initLoading, loading, list, data, submitting, value } = this.state;
-        debugger
-        const courseFeedbacks = course.feedback || [];
-        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: feedback.User.name || '', content: feedback.comment, avatar: feedback.User.avatar_url || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment().fromNow()}));
 
+      handlePreview = (chapter) => {
+          this.setState({
+              isOpen: true,
+              videoUrl: chapter.video_url
+          })
+      }
+    render() {
+        const { course, user } = this.props;
+        const { isOpen, videoUrl, list, data, submitting, value } = this.state;
+        const courseFeedbacks = course.feedback || [];
+        const feedbacks = courseFeedbacks.map(feedback => Object.assign(feedback, {author: _.get(feedback,'User.name') || '', content: feedback.comment, avatar: _.get(feedback, 'User.avatar_url') || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',datetime: moment(feedback.createdAt).fromNow()}));
+        const Editor = ({ onChange, onSubmit, submitting, value }) => (
+            <div>
+              <Form.Item>
+                <TextArea rows={4} onChange={onChange} value={value} />
+              </Form.Item>
+              <Form.Item>
+                <Rate onChange={(e) => this.setState({ rating: e})} value={this.state.rating} character={<Icon type="heart" />} allowHalf />
+              </Form.Item>
+              <Form.Item>
+                <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
+                  Leave a feedback
+                </Button>
+              </Form.Item>
+            </div>
+          );
         const IconLink = ({ src, text }) => (
             <a
                 style={{
@@ -172,10 +176,6 @@ class CourseDetail extends Component {
                 breadcrumbName: 'Course',
             },
             {
-                path: 'first',
-                breadcrumbName: _.get(course, 'category[0]') || "",
-            },
-            {
                 path: 'second',
                 breadcrumbName: _.get(course, 'name'),
             },
@@ -183,22 +183,16 @@ class CourseDetail extends Component {
         const content = (
             <div className="content">
                 <Row type="flex" style={{ alignItems: 'center' }}>
-                    <Rate
-                        count={5}
-                        defaultValue={course.rate || 0}
-                        allowHalf={true}
-                        disabled
-                    /> <p style={{ marginLeft: '15px' }}>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
+                    <Rate value={rateFormater(course.rate) || 0} character={<Icon type="heart" />} allowHalf disabled /> <p style={{ marginLeft: '15px' }}>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
                 </Row>
                 <Paragraph>
-                    Ant Design interprets the color system into two levels: a system-level color system and a
-                    product-level color system.
-              </Paragraph>
+                    {course.short_description}
+                </Paragraph>
                 <Paragraph>
                     Ant Design&#x27;s design team preferred to design with the HSB color model, which makes it
                     easier for designers to have a clear psychological expectation of color when adjusting colors,
                     as well as facilitate communication in teams.
-              </Paragraph>
+                </Paragraph>
                 <Row className="contentLink" type="flex">
                     <IconLink
                         src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg"
@@ -220,9 +214,9 @@ class CourseDetail extends Component {
                     <Button type="primary" ghost>
                         <Icon type="heart" /> Add to Wishlist
                     </Button>
-                    <Button type="danger" style={{ marginLeft: '20px' }}>
-                        <Icon type="share-alt" /> Share
-                    </Button>
+                    <FacebookShareButton quote={course.name}>
+                        <FacebookIcon size={32} round={true} />
+                    </FacebookShareButton>
                 </Row>
             </div>
         );
@@ -242,18 +236,7 @@ class CourseDetail extends Component {
         return (
             <>
                 <div style={{ color: 'white' }}>
-                    {/* <FloatingButton
-                        backgroundColor='1ef4fe'
-                        size='70'
-                        color='red'
-                    >
-                        <Item
-                            imgSrc={cartButton}
-                            onClick={() => {
-                                console.log("callback function here");
-                            }}
-                        />
-                    </FloatingButton>; */}
+                    <ModalVideo channel='custom' autoplay isOpen={isOpen} url={videoUrl} allowFullScreen={true} onClose={() => this.setState({ isOpen: false})} />
                     <PageHeader
                         style={{
                             padding: '30px 64px',
@@ -285,7 +268,7 @@ class CourseDetail extends Component {
                                     loadMore={loadMore}
                                     renderItem={item => (
                                         <List.Item
-                                            actions={[<a key="list-loadmore-edit">Preview</a>]}>
+                                            actions={[<a key="list-loadmore-edit" onClick={() => this.handlePreview(item)}>{item.status === 0 && 'Preview'}</a>]}>
                                             <Skeleton avatar title={false} loading={item.loading} active>
                                                 <List.Item.Meta
                                                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
@@ -312,17 +295,24 @@ class CourseDetail extends Component {
                                 <Comment
                                     avatar={
                                         <Avatar
-                                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                            src={_.get(user, 'avatar_url')}
                                             alt="Han Solo"
                                         />
                                     }
                                     content={
-                                        <Editor
-                                            onChange={this.handleChange}
-                                            onSubmit={this.handleSubmit}
-                                            submitting={submitting}
-                                            value={value}
-                                        />
+                                        <div>
+                                        <Form.Item>
+                                          <TextArea rows={4} onChange={this.handleChange} value={value} />
+                                        </Form.Item>
+                                        <Form.Item>
+                                          <Rate onChange={(e) => this.setState({ rating: e})} value={this.state.rating} character={<Icon type="heart" />} allowHalf />
+                                        </Form.Item>
+                                        <Form.Item>
+                                          <Button htmlType="submit" loading={submitting} onClick={this.handleSubmit} type="primary">
+                                            Leave a feedback
+                                          </Button>
+                                        </Form.Item>
+                                      </div>
                                     }
                                 />
                             </div>
@@ -336,6 +326,7 @@ class CourseDetail extends Component {
 
 const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
+    user: state.authentication.user,
     course: state.teacherCourse.data.currentCourse,
     cartItems: state.cart.carts
 })

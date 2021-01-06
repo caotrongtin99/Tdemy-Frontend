@@ -8,6 +8,8 @@ import logo from '../static/images/logo.svg'
 import {userActions}  from '../actions/userActions'
 import './Navbar.css';
 import { cartActions } from '../actions/cartActions';
+import {config} from '../_constants/api';
+const {API_URL} = config;
 const { SubMenu } = Menu;
 const { Header } = Layout;
 const { Search } = Input;
@@ -18,9 +20,47 @@ class Navbar extends Component {
             value: '',
             showModal: false,
             loading: false,
-            error: null
+            error: null,
+            categoryList: []
         }
     }
+
+    componentDidMount = () => {
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+            }
+        };
+
+        fetch(`${API_URL}/api/category/tree`, requestOptions)
+            .then(async (res) => {
+                const data = await this.handleResponse(res);
+                const categoryList = data.data.rows;
+                this.setState({
+                    categoryList
+                })
+            });
+    }
+
+    handleResponse = (response) => {
+        return response.text().then((text) => {
+            const data = text && JSON.parse(text);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.reload(true);
+                }
+
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
+            }
+
+            return data;
+        });
+    }
+
     openModal() {
         this.setState({
             showModal: true
@@ -85,7 +125,7 @@ class Navbar extends Component {
         const content = (
             <div>
                 {carts.length > 0 ? carts.map(course => <div style={{ cursor: 'pointer',display: 'flex', justifyContent: "space-between", alignItems: 'center', marginBottom: '5px'}}>
-                    <img src={course.avatar} style={{width: '45px', height: '45px', marginRight: '20px'}}/>
+                    <img src={course.avatar_url} style={{width: '45px', height: '45px', marginRight: '20px'}}/>
                     <p >{course.name}</p>
                     <p style={{ marginLeft: '20px'}}>{course.fee}$</p>
                 </div>) : <Empty description="Empty Cart"/>}
@@ -99,14 +139,16 @@ class Navbar extends Component {
         );
         const menu = (
             <Menu>
-              <Menu.Item key="0">
-                <a onClick={this.handleClickInfomation}>Your Infomation</a>
+              <Menu.Item key="0" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="user" /><a onClick={this.handleClickInfomation}>Your Infomation</a>
               </Menu.Item>
-              <Menu.Item key="1">
-                <a href="http://www.taobao.com/">Your Course</a>
+              <Menu.Item key="1" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="video-camera" />  <a onClick={()=> history.push('/course/my-courses')}>Your Course</a>
               </Menu.Item>
-              <Menu.Item key="3">Your Wishlist</Menu.Item>
-              <Menu.Item key="3">Payment History</Menu.Item>
+              <Menu.Item key="3" style={{ display: 'flex', alignItems: 'center'}}>
+              <Icon type="heart" /><a onClick={()=> history.push('/course/my-wishlist')}>My Wishlist</a>
+              </Menu.Item>
+              <Menu.Item key="3"><Icon type="pay-circle" />Payment History</Menu.Item>
               <Menu.Divider />
               <Menu.Item key="3" onClick={this.handleLogout}>Log out</Menu.Item>
             </Menu>
@@ -132,20 +174,21 @@ class Navbar extends Component {
                                                 display: 'block'
                                             }
                                         } key="sub2" title={<b><Icon type="appstore" />Categories</b>}>
-                                            <Menu.Item key="5">Digital Marketing</Menu.Item>
-                                            <Menu.Item key="6">IT - Software</Menu.Item>
-                                            <SubMenu key="sub3" title="IT - Software">
-                                                <Menu.Item key="7">Mobile Development</Menu.Item>
-                                                <Menu.Item key="8">Web Development</Menu.Item>
-                                                <Menu.Item key="8">Game Development</Menu.Item>
-                                            </SubMenu>
-                                            <Menu.Item key="6">Finance</Menu.Item>
-                                            <Menu.Item key="6">Design</Menu.Item>
+                                            {this.state.categoryList.map(category => {
+                                                if (category.subCount === 0) {
+                                                    return <Menu.Item key={category.name}>{category.name}</Menu.Item>
+                                                }
+                                                return (
+                                                    <SubMenu key={category.name} title={category.name} onTitleClick={() => history.push(`/category/${category.name}`)}>
+                                                        {category.subCat.map(subCategory=> <Menu.Item onClick={() => history.push(`/category/${subCategory.name}`)} key={subCategory.name}>{subCategory.name}</Menu.Item>)}
+                                                    </SubMenu>
+                                                )
+                                            })}
                                         </SubMenu>
                                     </Menu>
                                 </Col>
                                 <Col span={10} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Search placeholder="Search for anything" onSearch={value => console.log(value)} enterButton />
+                                    <Search placeholder="Search for anything" onSearch={(value)=> history.push(`/courses/search?key=${value}`)} enterButton />
                                 </Col>
                             </Row>
                         }
@@ -175,12 +218,13 @@ class Navbar extends Component {
                                     <Popover content={content} title="Cart">
                                         <Button style={{ marginRight: '15px'}}><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
                                     </Popover>}
-                                    <Popover content={notifications} title="Notification">
-                                        <Button style={{ marginRight: '15px'}}><Badge count={99} overflowCount={10}><Icon style={{ fontSize: '20px' }} type="bell" /></Badge></Button>
+                                    <Popover content={notifications} title="Notification" style={{ marginRight: '20px'}}>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '22px'}}><Badge count={1} overflowCount={10}><Icon style={{ fontSize: '20px' }} type="bell" /></Badge></div>
                                     </Popover>
+                                    <span style={{ fontSize: '12px', fontWeight: 'bold', marginRight: '10px'}}>Hi, {this.props.user.name.split(' ')[0]}</span>
                                     <Dropdown overlay={menu} trigger={['click']} style={{ marginLeft: '15px'}}>
                                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{this.props.user.name && <span>{this.props.user.name}</span>}<Icon type="down" />
+                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /><Icon type="down" />
                                         </a>
                                     </Dropdown>
                                 </Row>

@@ -1,5 +1,7 @@
-import { config } from '../_constants/api';
-const { API_URL } = config;
+import { notification } from 'antd';
+import {config} from '../_constants/api';
+const {API_URL} = config;
+
 export const userService = {
   login,
   logout,
@@ -57,10 +59,9 @@ function login(email, password, accessToken, refreshToken) {
   return fetch(`${API_URL}/api/auth`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("token", res.data.accessToken);
-      localStorage.setItem("ref_token", res.data.ref_token);
-      return res.data;
+      if (res.result === 0){
+        return res.data;
+      }
     });
 }
 
@@ -116,7 +117,6 @@ function createComment(feedback) {
   return fetch(`${API_URL}/api/courses/${id}/feedback`, requestOptions)
     .then(handleResponse)
     .then((res) => {
-
       return res.data;
     });
 }

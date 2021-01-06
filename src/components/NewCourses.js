@@ -6,7 +6,7 @@ import 'react-multi-carousel/lib/styles.css';
 import CourseCard from './CourseCard';
 
 
-class MostViewCourses extends Component {
+class NewCourses extends Component {
     handleOnlick = () => {
         
     }
@@ -96,7 +96,7 @@ class MostViewCourses extends Component {
                     itemClass="carousel-item-padding-40-px"
                 >
                     {
-                        courses.map(course => <CourseCard onClick={this.handleOnlick} course={course}/>)
+                        courses.map(course => <CourseCard isNewCourse={true} onClick={this.handleOnlick} course={course}/>)
                     }
                 </Carousel>
             </>
@@ -108,4 +108,4 @@ const mapStateToProps = state => ({
     courses: state.studentCourse.data.mostViewCourses || []
 })
 
-export default connect(mapStateToProps)(MostViewCourses);
+export default connect(mapStateToProps)(NewCourses);

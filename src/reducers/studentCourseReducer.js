@@ -43,12 +43,24 @@ export function studentCourse(state = initialState, action) {
                 ...state,
                 data: { ...state.data, ...newData }
             }
+        case "getStudentWishlist":
+            return {
+                ...state,
+                data: {
+                    ...state.data, wishlists: action.data
+                },
+            };
         case "addMyCourses":
-            const a = action.data;
-            debugger
             return {
                 ...state,
                 data: { ...state.data, myCourses: [...state.data.myCourses,...action.data] }
+            }
+        case "removeItemInWishlist":
+            const courseId = action.data[0];
+            debugger
+            return {
+                ...state,
+                data: { ...state.data, wishlists: state.data.wishlists.filter(item => item.course_id !== courseId) }
             }
         default:
             return state;

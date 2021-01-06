@@ -1,35 +1,63 @@
-import { Card, Popover, Row, Button, Tag, notification } from 'antd'
+import { Card, Popover, Row, Button, Tag, notification, Icon } from 'antd'
 import React, { Component } from 'react'
 import Rate from 'rc-rate';
 import 'rc-rate/assets/index.css';
 import Heart from "react-animated-heart";
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router";
 import { cartActions } from '../actions/cartActions';
 import { history } from '../_helpers/history';
+import rateFormater from '../utils/ratingFormater';
 import { courseActions } from '../actions/courseActions';
 
 class CourseCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isInWishList: this.props.course.isInWishList
+            isInWishList: false
         }
     }
 
+    componentDidMount = () => {
+        if (this.props.isLoggedIn){
+            const {user, course, wishlists} = this.props;
+            this.props.dispatch(courseActions.getStudentCourses(user.id))
+            this.setState({
+                isInWishList: this.inWishlistChecker(course, wishlists)
+            }, () => console.log("=====", this.state.isInWishList))
+        }
+    }
+
+    inWishlistChecker = (courseDetail, wishlist) => {
+        const courseFound = wishlist.find(course => course.Course.id === courseDetail.id);
+        return courseFound ? true : false;
+    }
+
     addToCard = (course) => {
-        this.props.dispatch(cartActions.addToCart(course));
-        notification.success({
-            message: 'Cart Notification',
-            description: 'This course has been added to the cart!'
-        })
+        const {myCourses} = this.props;
+        const {carts} = this.props;
+        const isExist = carts.find(cart => cart.id === course.id)
+        if (isExist) {
+            notification.error({
+                message: 'Error!',
+                description: 'You had it in the cart'
+            })
+        } else {
+            this.props.dispatch(cartActions.addToCart(course));
+            notification.success({
+                message: 'Cart Notification',
+                description: 'This course has been added to the cart!'
+            })
+        }
     }
 
     handleAddWishList = (course) => {
         const a = this.props.isLoggedIn;
         if (this.props.isLoggedIn) {
+            this.props.dispatch(courseActions.addToWishList(course.id))
             this.setState({
-                isInWishList: !this.state.isInWishList
+                isInWishList: true
             })
         } else {
             notification.warning({
@@ -40,24 +68,30 @@ class CourseCard extends Component {
     }
 
     async handleViewDetail(course) {
-        // await this.props.dispatch(courseActions.getCourseDetail(course.id))
-        // const a = this.props;
-        // debugger
-        history.push(`/course/${course.id}`)
+        const { match} = this.props;
+        const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
+        isMyCoursesPage ? history.push(`/course/my-courses/${course.id}`) : history.push(`/course/${course.id}`)
+    }
+
+    removeItemInWishlist = (course) => {
+        this.props.dispatch(courseActions.removeItemInWishlist([course.id]))
     }
 
     render() {
-        const { course } = this.props;
+        const { course, isBestSeller, match} = this.props;
+        const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
+        const isWishlistPage = _.get(match, 'path') === "/course/my-wishlist";
         const content = (
             <div>
                 <h2 style={{ fontWeight: 'bold' }}>{course.name}</h2>
                 <Tag color="magenta">{course.category}</Tag>
-                <Row type="flex" style={{ alignItems: "center" }}>
+                {!isMyCoursesPage && <Row type="flex" style={{ alignItems: "center" }}>
                     <Button type="danger" danger onClick={() => this.addToCard(course)}>
                         Add to cart
                     </Button>
                     <Heart isClick={this.state.isInWishList} onClick={() => this.handleAddWishList(course)} />
-                </Row>
+                    {isWishlistPage && <Icon onClick={() => this.removeItemInWishlist(course)} style={{ fontSize: '26px', color: 'red'}} type="delete" />}
+                </Row>}
             </div>
         );
         return (
@@ -68,13 +102,13 @@ class CourseCard extends Component {
                             hoverable
                             style={{ width: 300 }}
                             // onClick={this.handleViewDetail(course)}
-                            cover={<img alt="example" src={course.avatar_url} />}
+                            cover={<img alt="example" style={{width: '298px', height: '200px'}} src={course.avatar_url} />}
                         >
-                            <h4>{course.name}</h4>
+                            <h4>{course.name}</h4>{isBestSeller &&  <Tag color="red">Best Seller</Tag>}
                             <p>{course.author}</p>
                             <Rate
                                 count={5}
-                                defaultValue={course.rating}
+                                defaultValue={rateFormater(course.rate) || 0}
                                 allowHalf={true}
                                 disabled
                             />,
@@ -87,7 +121,11 @@ class CourseCard extends Component {
 }
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.authentication.loggedIn
+    isLoggedIn: state.authentication.loggedIn,
+    carts: state.cart.carts,
+    user: state.authentication.user,
+    myCourses: state.studentCourse.data.myCourses,
+    wishlists: state.studentCourse.data.wishlists
 })
 
-export default connect(mapStateToProps)(CourseCard);
+export default withRouter(connect(mapStateToProps)(CourseCard));

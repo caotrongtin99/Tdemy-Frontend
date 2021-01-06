@@ -6,6 +6,7 @@ import { history } from "../_helpers/history";
 import { notification } from "antd";
 
 export const courseActions = {
+    saveSession,
     createCourse,
     updateCourse,
     getCourseDetail,
@@ -15,8 +16,18 @@ export const courseActions = {
     getStudentCourses,
     getMostViewCourses,
     deleteCourse,
-    createEnroll
+    createEnroll,
+    addToWishList,
+    getStudentWishList,
+    removeItemInWishlist,
+    deleteChapter
 };
+
+function saveSession(session) {
+    return (dispatch) => {
+
+    }
+}
 
 function createCourse(course) {
     
@@ -38,11 +49,9 @@ function createCourse(course) {
 function updateCourse(course) {
     const {id} = course;
     return (dispatch) => {
-        // dispatch({ type: 'creatCourse', course });
         courseService.updateCourse(course)
             .then(data => {
                 if (data[0] ==1){
-                    // dispatch(alertActions.success("Update course fee successfully!!"))
                     notification.success({
                         message: 'Update message',
                         description: 'Update Course successfully!'
@@ -64,6 +73,22 @@ function deleteCourse(course) {
                         description: 'Delete Course successfully!'
                     })
                     history.push('/teacher/course/')
+                }
+            })
+    };
+}
+
+function removeItemInWishlist(courseId) {
+    return (dispatch) => {
+        courseService.removeItemInWishlist(courseId)
+            .then(data => {
+                if (data === 0){
+                    debugger
+                    dispatch({ type: 'removeItemInWishlist', data: courseId});
+                } else {
+                    notification.error({
+                        message: 'Error!'
+                    })
                 }
             })
     };
@@ -129,6 +154,29 @@ function createEnroll(courseIds) {
     }
 }
 
+function addToWishList(courseId) {
+    return (dispatch) => {
+        courseService.addToWishList(courseId)
+            .then(data => {
+                    if (!data) {
+                        notification.error({
+                            message: 'Error',
+                            description: 'You had it in wishlist before'
+                        })
+                    }
+                    })
+    }
+}
+
+function getStudentWishList() {
+    return (dispatch) => {
+        courseService.getStudentWishList()
+        .then(data => {
+            dispatch({ type: 'getStudentWishlist', data: data})
+        })
+    };
+}
+
 function updateChapter(courseId, chapter) {
     return (dispatch) => {
         courseService.updateChapter(chapter)
@@ -142,4 +190,19 @@ function updateChapter(courseId, chapter) {
                 }
             })
     }
+}
+
+function deleteChapter(chapterId, courseId) {
+    return (dispatch) => {
+        courseService.deleteChapter(chapterId, courseId)
+            .then(data => {
+                if (data === 0){
+                    dispatch({ type: 'deleteChapter', data: { chapterId, courseId}})
+                    notification.success({
+                        message: 'Delete message',
+                        description: 'Delete Chapter successfully!'
+                    })
+                }
+            })
+    };
 }
