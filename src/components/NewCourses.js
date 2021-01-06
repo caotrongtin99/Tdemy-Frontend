@@ -105,7 +105,7 @@ class NewCourses extends Component {
 }
 
 const mapStateToProps = state => ({
-    courses: state.studentCourse.data.mostViewCourses
+    courses: state.studentCourse.data.mostViewCourses || []
 })
 
 export default connect(mapStateToProps)(NewCourses);

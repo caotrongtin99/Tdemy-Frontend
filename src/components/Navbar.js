@@ -219,7 +219,7 @@ class Navbar extends Component {
                                         <Button style={{ marginRight: '15px'}}><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
                                     </Popover>}
                                     <Popover content={notifications} title="Notification" style={{ marginRight: '20px'}}>
-                                        <Button style={{ marginRight: '15px'}}><Badge count={99} overflowCount={10}><Icon style={{ fontSize: '20px' }} type="bell" /></Badge></Button>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '22px'}}><Badge count={1} overflowCount={10}><Icon style={{ fontSize: '20px' }} type="bell" /></Badge></div>
                                     </Popover>
                                     <span style={{ fontSize: '12px', fontWeight: 'bold', marginRight: '10px'}}>Hi, {this.props.user.name.split(' ')[0]}</span>
                                     <Dropdown overlay={menu} trigger={['click']} style={{ marginLeft: '15px'}}>

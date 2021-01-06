@@ -16,7 +16,8 @@ export const courseService = {
     addToWishList,
     getStudentWishList,
     createSession,
-    removeItemInWishlist
+    removeItemInWishlist,
+    deleteChapter
 };
 
 function createSession(session) {
@@ -156,7 +157,7 @@ async function getMostViewCourses() {
         "x-access-token": localStorage.getItem('token'),
         "x-refresh-token": localStorage.getItem('ref_token')
   }})
-  
+  debugger
   return res.data.data.array;
 }
 
@@ -196,6 +197,22 @@ function updateChapter(chapter) {
     .then(handleResponse)
     .then((res) => {
       return res.data;
+    });
+}
+
+function deleteChapter(id, courseId) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json",
+    "x-access-token": localStorage.getItem('token'),
+    "x-refresh-token": localStorage.getItem('ref_token')
+     }
+  };
+
+  return fetch(`${API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      return res.result;
     });
 }
 

@@ -65,6 +65,10 @@ class CourseContent extends Component {
         this.props.dispatch(courseActions.updateChapter(currentChapter.course_id, chapter))
     }
 
+    deleteChapter = (currentChapter) => {
+        this.props.dispatch(courseActions.deleteChapter(currentChapter.id, currentChapter.course_id))
+    }
+
     saveFormRef = formRef => {
         this.formRef = formRef;
     };
@@ -135,9 +139,10 @@ class CourseContent extends Component {
                         </Button>
                     </Row>
                     {chapters.map((chapter, key) => <Card style={{ marginBottom: '15px' }} title={<>
-                        <span style={{ fontWeight: 'bold' }}>{`Lesson ${key + 1}: `}</span>
+                        <span style={{ fontWeight: 'bold' }}>{`Lesson: `}</span>
                         <Text editable={{ onChange: (e) => this.onChangeTitle(e, chapter) }} >{`${chapter.title}`}</Text>
-                        <Button style={{ marginLeft: '30px'}} onClick={() => this.updateChapterStatus(chapter.status, chapter)}>{chapter.status === 0 ? 'Make Private' : 'Make Public'}</Button>
+                        <Button type="primary" ghost style={{ marginLeft: '30px', marginRight: '10px'}} onClick={() => this.updateChapterStatus(chapter.status, chapter)}>{chapter.status === 0 ? 'Make Private' : 'Make Public'}</Button>
+                        <Button type="danger" ghost onClick={() => this.deleteChapter(chapter)}>Delete</Button>
                     </>
                     }>
                         {chapter.video_url && <Icon type="file-image" />} <p> {chapter.video_url}</p> 

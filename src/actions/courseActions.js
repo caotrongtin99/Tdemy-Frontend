@@ -19,7 +19,8 @@ export const courseActions = {
     createEnroll,
     addToWishList,
     getStudentWishList,
-    removeItemInWishlist
+    removeItemInWishlist,
+    deleteChapter
 };
 
 function saveSession(session) {
@@ -189,4 +190,19 @@ function updateChapter(courseId, chapter) {
                 }
             })
     }
+}
+
+function deleteChapter(chapterId, courseId) {
+    return (dispatch) => {
+        courseService.deleteChapter(chapterId, courseId)
+            .then(data => {
+                if (data === 0){
+                    dispatch({ type: 'deleteChapter', data: { chapterId, courseId}})
+                    notification.success({
+                        message: 'Delete message',
+                        description: 'Delete Chapter successfully!'
+                    })
+                }
+            })
+    };
 }
