@@ -57,7 +57,6 @@ export function studentCourse(state = initialState, action) {
             }
         case "removeItemInWishlist":
             const courseId = action.data[0];
-            debugger
             return {
                 ...state,
                 data: { ...state.data, wishlists: state.data.wishlists.filter(item => item.course_id !== courseId) }

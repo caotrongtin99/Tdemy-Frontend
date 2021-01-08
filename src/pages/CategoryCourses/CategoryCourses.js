@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Select } from 'antd'
+import { Col, Empty, Row, Select, Pagination } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
 import queryString from 'query-string';
@@ -12,7 +12,9 @@ const { Option } = Select;
 class CategoryCourses extends Component {
     state = {
         courseList: [],
-        category: ''
+        category: '',
+        page: 1,
+        total: 0
     };
     componentDidMount = () => {
         const {match, location} = this.props;
@@ -27,12 +29,13 @@ class CategoryCourses extends Component {
             },
             body: JSON.stringify({ type: 'category', value: match.params.category}),
             };
-          return fetch(`${API_URL}/api/courses`, requestOptions)
+          return fetch(`${API_URL}/api/courses?limit=8&offset=0`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
-              debugger
+                debugger
               this.setState({
-                  courseList: res.data.array
+                  courseList: res.data.array,
+                  total: res.data.count
               })
             });
     }
@@ -53,8 +56,33 @@ class CategoryCourses extends Component {
         });
       }
 
+    handleChangePage = (page) => {
+        debugger
+        this.setState({
+            page: page
+        }, () => {
+            console.log("==== page===", this.state.page)
+            const {match, location} = this.props;
+            const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem('token'),
+            "x-refresh-token": localStorage.getItem('ref_token')
+            },
+            body: JSON.stringify({ type: 'category', value: match.params.category}),
+            };
+            debugger
+            fetch(`${API_URL}/api/courses?limit=8&offset=${(this.state.page - 1)*8}`, requestOptions)
+            .then(this.handleResponse)
+            .then((res) => {
+              this.setState({
+                  courseList: res.data.array
+              })
+            });
+        })
+    }
+
     render() {
-        const {location} = this.props;
         const {courseList, category} = this.state;
         const listCoursesRender = courseList.map(course => <Col md={6} sm={24}><CourseCard course={course} /></Col>)
         return (
@@ -65,14 +93,16 @@ class CategoryCourses extends Component {
                         <h2 style={{ fontWeight: 'bold', fontSize: '18px' }}>{category} Courses </h2>
                         </Row>
                         <Row type="flex" justify="space-between" style={{ alignItems: 'center'}}>
-                            <h2 style={{ fontWeight: 'bold', fontSize: '14px' }}>{courseList.length} results for {category} </h2>
+                            <h2 style={{ fontWeight: 'bold', fontSize: '14px' }}>{this.state.total} results for {category} </h2>
                         </Row>
                         <Row gutter={160}>
                         {
                             courseList.length > 0 ?<div>{ listCoursesRender }</div>: <Empty style={{ padding: '100px 0'}}/>
                         }
                         </Row>
-                        {/* <p style={{ fontSize: '14px' }}>Filter by:</p> */}
+                        <Row type="flex" justify="center" style={{ marginBottom: '20px'}}>
+                            <Pagination current={this.state.page} pageSize={8} onChange={this.handleChangePage} total={this.state.total}/>
+                        </Row>
 
                     </Col>
                 </Row>

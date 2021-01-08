@@ -75,12 +75,10 @@ class CreateCourse extends Component {
             category: [this.state.categories],
             short_description: this.state.description,
         }
-        debugger
         this.props.dispatch(courseActions.createCourse(course))
     }
 
     onChangeCategory (e) {
-        debugger
         this.setState({
             categories: e
         })

@@ -10,14 +10,51 @@ import HotCourses from '../../components/HotCourses';
 import { courseActions } from '../../actions/courseActions';
 import MostViewCourses from '../../components/MostViewCourses';
 import NewCourses from '../../components/NewCourses';
-// import HotCourses from '../../components/HotCourses';
-
+import {config} from '../../_constants/api';
+import { history } from '../../_helpers/history';
+const {API_URL} = config;
 class HomePage extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            hotCategories: []
+        };
+    }
     componentDidMount = () => {
         this.props.dispatch(courseActions.getMostViewCourses());
         this.props.dispatch(courseActions.getStudentWishList());
+        const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem('token'),
+            "x-refresh-token": localStorage.getItem('ref_token')
+            },
+            };
+        fetch(`${API_URL}/api/category`,requestOptions)
+            .then(this.handleResponse)
+            .then((res) => {
+                this.setState({
+                    hotCategories: res.data.rows
+                })
+            });
     }
+    handleResponse(response) {
+        return response.text().then((text) => {
+          const data = text && JSON.parse(text);
+          if (!response.ok) {
+            if (response.status === 401) {
+              window.location.reload(true);
+            }
+      
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+          }
+      
+          return data;
+        });
+      }
     render() {
+        console.log(this.state.hotCategories)
         return (
             <div className='homepage'>
                 <Carousel autoplay>
@@ -54,28 +91,28 @@ class HomePage extends Component {
                         <h2 style={{ fontSize: '32px', fontFamily: 'Open Sans', fontWeight: '700' }}>Achieve your goals with Tdemy</h2>
                     </Row>
                     <Row>
-                        <Col md={24} lg={6}>
+                        <Col md={24} lg={6} className="card-intro">
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={LearnSkill} />
                                 <span className="goal">Learn the latest skills</span>
                                 <small>like business analytics, graphic design, Python, and more</small>
                             </div>
                         </Col>
-                        <Col md={24} lg={6}>
+                        <Col md={24} lg={6} className="card-intro">
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={Career} />
                                 <span className="goal">Get ready for a career</span>
                                 <small>in high-demand fields like IT, AI and cloud engineering</small>
                             </div>
                         </Col>
-                        <Col md={24} lg={6}>
+                        <Col md={24} lg={6} className="card-intro">
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={Certificate} />
-                                <span className="goal">Earn a certificate or degree</span>
-                                <small>from a leading university in business, computer science, and more</small>
+                                <span className="goal">Earn a certificate</span>
+                                <small>From a leading university in business, computer science, and more</small>
                             </div>
                         </Col>
-                        <Col md={24} lg={6}>
+                        <Col md={24} lg={6} className="card-intro">
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={Organization} />
                                 <span className="goal">Upskill your organization</span>
@@ -94,8 +131,20 @@ class HomePage extends Component {
                 </Row> */}
                 <Row type="flex" justify="center">
                     <Col span={22} style={{ margin: '0 auto'}}>
+                    <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Featured Categories</h2>
+                    <Row style={{ paddingBottom: '40px'}} gutter={30}>
+                        {this.state.hotCategories.map(category => <Col span={6} >
+                            <div onClick={()=> history.push(`/category/${category.name}`)} className="category-card" style={{border: '1px solid #dcdacb', borderRadius: '4px', color: '#0f7c90', padding: '18px 0', margin: '5px 5px', display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+                                <p style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '14px'}}>{category.name}</p>
+                            </div>
+                        </Col>)}
+                    </Row>
+                    </Col>
+                </Row>
+                <Row type="flex" justify="center">
+                    <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Most View Courses</h2>
-                    <Row style={{ paddingBottom: '100px'}}>
+                    <Row style={{ paddingBottom: '40px'}}>
                         <MostViewCourses/>
                     </Row>
                     </Col>
@@ -103,7 +152,7 @@ class HomePage extends Component {
                 <Row type="flex" justify="center">
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>New Courses</h2>
-                    <Row style={{ paddingBottom: '100px'}}>
+                    <Row style={{ paddingBottom: '40px'}}>
                         <NewCourses/>
                     </Row>
                     </Col>

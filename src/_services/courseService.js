@@ -92,7 +92,6 @@ function deleteCourse(course) {
 }
 
 function removeItemInWishlist(course_id) {
-  debugger
   const requestOptions = {
     method: "DELETE",
     headers: { "Content-Type": "application/json",
@@ -157,7 +156,6 @@ async function getMostViewCourses() {
         "x-access-token": localStorage.getItem('token'),
         "x-refresh-token": localStorage.getItem('ref_token')
   }})
-  debugger
   return res.data.data.array;
 }
 
@@ -269,7 +267,6 @@ function getStudentWishList(id) {
   return fetch(`${API_URL}/api/wishlist/`,requestOptions)
     .then(handleResponse)
     .then((res) => {
-      debugger
       return res.data.array;
     });
 }

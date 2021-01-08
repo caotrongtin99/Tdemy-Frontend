@@ -1,4 +1,4 @@
-import { Col, Row, Select, Pagination } from 'antd'
+import { Col, Row, Select, Pagination, Button } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
 import queryString from 'query-string';
@@ -10,10 +10,19 @@ const {API_URL} = config;
 const { Option } = Select;
 
 class SearchPage extends Component {
-    state = {
-        courseList: []
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            courseList: [],
+            sortByLatest: "",
+            sortByPrice: "",
+            sortByRating: "desc",
+            total: 0,
+            page: 1
+        };
+    }
     componentDidMount = () => {
+        debugger
         const {match, location} = this.props;
         let params = queryString.parse(location.search)
         const {key, fee} = params;
@@ -24,11 +33,12 @@ class SearchPage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-          return fetch(`${API_URL}/api/search?key=${key}&limit=10&offset=0`,requestOptions)
+          return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
-                  courseList: res.data.array
+                  courseList: res.data.array,
+                  total: res.data.totalCount
               })
             });
     }
@@ -48,33 +58,141 @@ class SearchPage extends Component {
           return data;
         });
       }
+    
+    handleSortBySelling = () => {
+        const {match, location} = this.props;
+        let params = queryString.parse(location.search)
+        const {key, fee} = params;
+        this.setState({
+            isSortBySelling : !this.state.isSortBySelling
+        }, () => {
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                };
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                  this.setState({
+                      courseList: res.data.array
+                  })
+                });
+        })
+    }
+
+    handleSortByRating = (value) => {
+        const { location} = this.props;
+        let params = queryString.parse(location.search)
+        const {key} = params;
+        this.setState({
+            sortByRating : value
+        }, () => {
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                };
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                  this.setState({
+                      courseList: res.data.array
+                  })
+                });
+        })
+    }
+
+    handleSortByPrice = (value) => {
+        const { location} = this.props;
+        let params = queryString.parse(location.search)
+        const {key} = params;
+        this.setState({
+            sortByPrice : value
+        }, () => {
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                };
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                  this.setState({
+                      courseList: res.data.array
+                  })
+                });
+        })
+    }
+
+    handleSortByLatest = () => {
+        this.setState({
+            isSortByLatest : !this.state.isSortByLatest
+        })
+    }
+
+    handleChangePage = (page) => {
+        this.setState({
+            page: page
+        }, ()=> {
+            const {match, location} = this.props;
+            let params = queryString.parse(location.search)
+            const {key, fee} = params;
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                };
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                    console.log("=============res===============", res.data.array)
+                    this.setState({
+                        courseList: res.data.array,
+                        total: res.data.totalCount
+                    })
+                });
+        })
+    }
 
     render() {
         const {match, location} = this.props;
-        const {courseList} = this.state;
+        const {courseList, isSortByLatest, isSortBySelling} = this.state;
         let params = queryString.parse(location.search)
         const {key, fee} = params;
         return (
             <>
                 <Row type="flex" justify="center">
-                    <Col md={20} lg={18} style={{ marginTop: '30px' }}>
-                        <Row type="flex" justify="space-between" style={{ alignItems: 'center'}}>
-                            <h2 style={{ fontWeight: 'bold', fontSize: '18px' }}>{courseList.length} results for {key} </h2>
-                            {/* <div style={{ display: 'flex', alignItems: 'center'}}>
-                                <span style={{ fontSize: '18px', marginRight: '20px' }}>Sort by:</span>
-                                <Select defaultValue="lucy" style={{ width: 120 }}>
-                                    <Option value="jack">Rating</Option>
-                                    <Option value="lucy">Student</Option>
+                    <Col md={24} lg={22} style={{ marginTop: '30px' }}>
+                        <Row type="flex" justify="space-between" style={{ alignItems: 'center', marginBottom: '20px'}}>
+                            <h2 style={{ fontWeight: 'bold', fontSize: '18px' }}>{this.state.total} results for {key} </h2>
+                            <div style={{ display: 'flex', alignItems: 'center'}}>
+                                <span style={{ fontSize: '18px', fontWeight: 'bold', marginRight: '20px' }}>Sort by:</span>
+                                <Select style={{ width: 160, marginRight: '5px' }} allowClear onChange={this.handleSortByPrice} placeholder="Price">
+                                    <Option value="asc">Price: Low To High</Option>
+                                    <Option value="desc">Price: High To Low</Option>
                                 </Select>
-                            </div> */}
+                                <Select style={{ width: 160 }} allowClear onChange={this.handleSortByRating} placeholder="Rating">
+                                    <Option value="asc">Rating: Low To High</Option>
+                                    <Option value="desc">Rating: High To Low</Option>
+                                </Select>
+                            </div>
                         </Row>
-                        <Row gutter={160}>
+                        <Row gutter={40}>
                         {
                             courseList.map(course => <Col className="gutter-row" md={6} sm={24} ><CourseCard course={course} /></Col>)
                         }
                         </Row>
                         <Row type="flex" justify="center" style={{ marginBottom: '20px'}}>
-                            <Pagination defaultCurrent={1} total={courseList.length}/>
+                            <Pagination defaultCurrent={1} current={this.state.page} onChange={this.handleChangePage} total={this.state.total}/>
                         </Row>
 
                     </Col>

@@ -41,7 +41,6 @@ class CourseContent extends Component {
             const { title, upload } = values;
             const chapter = { title, courseId: this.props.currentCourse.id, video_url: this.state.video_url }
             form.resetFields();
-            debugger
             this.props.dispatch(courseActions.createChapter(chapter));
             this.setState({ visible: false })
         });

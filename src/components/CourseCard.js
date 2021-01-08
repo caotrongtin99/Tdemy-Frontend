@@ -106,9 +106,12 @@ class CourseCard extends Component {
                         >
                             <h4>{course.name}</h4>{isBestSeller &&  <Tag color="red">Best Seller</Tag>}
                             <p>{course.author}</p>
+                            <div>
+                            <b>$ {course.fee}</b>
+                            </div>
                             <Rate
                                 count={5}
-                                defaultValue={rateFormater(course.rate) || 0}
+                                value={rateFormater(course.rate) || 4}
                                 allowHalf={true}
                                 disabled
                             />,

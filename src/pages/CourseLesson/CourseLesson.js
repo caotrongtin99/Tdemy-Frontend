@@ -48,7 +48,6 @@ class CourseLesson extends Component {
     componentWillUnmount = () => {
         const { match } = this.props;
         const {currentChapter} = this.state;
-        debugger
         const currentTime = this.player.getCurrentTime();
         const requestOptions = {
             method: "POST",

@@ -83,7 +83,6 @@ function removeItemInWishlist(courseId) {
         courseService.removeItemInWishlist(courseId)
             .then(data => {
                 if (data === 0){
-                    debugger
                     dispatch({ type: 'removeItemInWishlist', data: courseId});
                 } else {
                     notification.error({
