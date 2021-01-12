@@ -77,6 +77,12 @@ class CourseCard extends Component {
         this.props.dispatch(courseActions.removeItemInWishlist([course.id]))
     }
 
+    ramdomColor = _ => {
+        const colors = ['volcano', 'cyan', 'orange', 'magenta', 'gold', 'purple'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        return color;
+    }
+
     render() {
         const { course, isBestSeller, match} = this.props;
         const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
@@ -84,7 +90,10 @@ class CourseCard extends Component {
         const content = (
             <div>
                 <h2 style={{ fontWeight: 'bold' }}>{course.name}</h2>
-                <Tag color="magenta">{course.category}</Tag>
+                {course.category[0].map(category => <Tag style={{ marginRight: '10px'}} color={this.ramdomColor()}>{category}</Tag>)}
+                <div style={{ marginTop: '15px'}}>
+                <p>{course.short_description}</p>
+                </div>
                 {!isMyCoursesPage && <Row type="flex" style={{ alignItems: "center" }}>
                     <Button type="danger" danger onClick={() => this.addToCard(course)}>
                         Add to cart
@@ -105,7 +114,7 @@ class CourseCard extends Component {
                             cover={<img alt="example" style={{width: '298px', height: '200px'}} src={course.avatar_url} />}
                         >
                             <h4>{course.name}</h4>{isBestSeller &&  <Tag color="red">Best Seller</Tag>}
-                            <p>{course.author}</p>
+                            <i>{course.owner_name}</i>
                             <div>
                             <b>$ {course.fee}</b>
                             </div>

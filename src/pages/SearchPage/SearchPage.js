@@ -25,7 +25,8 @@ class SearchPage extends Component {
         debugger
         const {match, location} = this.props;
         let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        const {searchKeyword, fee} = this.props;
+        console.log(this.props)
         const requestOptions = {
             method: "GET",
             headers: { "Content-Type": "application/json",
@@ -33,7 +34,7 @@ class SearchPage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-          return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+          return fetch(`${API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -62,7 +63,7 @@ class SearchPage extends Component {
     handleSortBySelling = () => {
         const {match, location} = this.props;
         let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        const {key, fee} = this.props;
         this.setState({
             isSortBySelling : !this.state.isSortBySelling
         }, () => {
@@ -84,9 +85,7 @@ class SearchPage extends Component {
     }
 
     handleSortByRating = (value) => {
-        const { location} = this.props;
-        let params = queryString.parse(location.search)
-        const {key} = params;
+        const { searchKeyword: key} = this.props;
         this.setState({
             sortByRating : value
         }, () => {
@@ -110,7 +109,7 @@ class SearchPage extends Component {
     handleSortByPrice = (value) => {
         const { location} = this.props;
         let params = queryString.parse(location.search)
-        const {key} = params;
+        const { searchKeyword : key} = this.props;
         this.setState({
             sortByPrice : value
         }, () => {
@@ -143,7 +142,7 @@ class SearchPage extends Component {
         }, ()=> {
             const {match, location} = this.props;
             let params = queryString.parse(location.search)
-            const {key, fee} = params;
+            const { searchKeyword : key} = this.props;
             const requestOptions = {
                 method: "GET",
                 headers: { "Content-Type": "application/json",
@@ -165,9 +164,9 @@ class SearchPage extends Component {
 
     render() {
         const {match, location} = this.props;
-        const {courseList, isSortByLatest, isSortBySelling} = this.state;
+        const {courseList} = this.state;
         let params = queryString.parse(location.search)
-        const {key, fee} = params;
+        const { searchKeyword: key} = this.props;
         return (
             <>
                 <Row type="flex" justify="center">
@@ -202,10 +201,13 @@ class SearchPage extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = state => {
+    return ({
     loggedIn: state.authentication.loggedIn,
     course: state.teacherCourse.data.currentCourse,
+    searchKeyword: state.studentCourse.data.searchKeyword,
     cartItems: state.cart.carts
-})
+    })
+}
 
 export default connect(mapStateToProps)(SearchPage);

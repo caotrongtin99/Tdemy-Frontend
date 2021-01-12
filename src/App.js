@@ -30,12 +30,49 @@ import CategoryCourses from './pages/CategoryCourses/CategoryCourses';
 import ActiveAccount from './pages/ActiveAccount/ActiveAccount';
 import NotFound from './components/NotFound';
 import Page403 from './components/Page403';
-
+import {config} from './_constants/api';
+const {API_URL} = config;
 class App extends React.Component {
-  componentWillMount() {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //       categoryList: []
+  //   }
+  // }
+  // handleResponse = (response) => {
+  //   return response.text().then((text) => {
+  //       const data = text && JSON.parse(text);
+  //       if (!response.ok) {
+  //           if (response.status === 401) {
+  //               window.location.reload(true);
+  //           }
 
-  }
+  //           const error = (data && data.message) || response.statusText;
+  //           return Promise.reject(error);
+  //       }
 
+  //       return data;
+  //   });
+  // }
+//   componentDidMount = () => {
+//     const requestOptions = {
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "x-access-token": localStorage.getItem('token'),
+//             "x-refresh-token": localStorage.getItem('ref_token')
+//         }
+//     };
+
+//     fetch(`${API_URL}/api/category`, requestOptions)
+//         .then(async (res) => {
+//             const data = await this.handleResponse(res);
+//             const categoryList = data.data.rows;
+//             this.setState({
+//                 categoryList
+//             })
+//         });
+// }
   render() {
     const {isLoggedIn, role }= this.props;
     return (
@@ -43,7 +80,7 @@ class App extends React.Component {
         <Router history={history}>
           <div className="App">
             <Layout>
-              <Navbar style={{ position: 'fixed' }} />
+              <Navbar style={{ position: 'fixed' }} onSubmitSearch={this.handleSearch} />
               <BackTop />
               <Switch>
                 <Route exact path='/'>

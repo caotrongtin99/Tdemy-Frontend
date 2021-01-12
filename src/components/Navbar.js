@@ -120,6 +120,10 @@ class Navbar extends Component {
         this.props.dispatch(cartActions.clearCart());
         history.push('/')
     }
+    handleSearch = (value) => {
+        history.push(`/courses/search?key=${value}`);
+        this.props.dispatch({ type: 'saveSearchKeyword', data: value})
+    }
     render() {
         const {carts, role} = this.props;
         const content = (
@@ -176,7 +180,7 @@ class Navbar extends Component {
                                         } key="sub2" title={<b><Icon type="appstore" />Categories</b>}>
                                             {this.state.categoryList.map(category => {
                                                 if (category.subCount === 0) {
-                                                    return <Menu.Item key={category.name}>{category.name}</Menu.Item>
+                                                    return <Menu.Item onClick={() => history.push(`/category/${category.name}`)} key={category.name}>{category.name}</Menu.Item>
                                                 }
                                                 return (
                                                     <SubMenu key={category.name} title={category.name} onTitleClick={() => history.push(`/category/${category.name}`)}>
@@ -188,7 +192,7 @@ class Navbar extends Component {
                                     </Menu>
                                 </Col>
                                 <Col span={10} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Search placeholder="Search for anything" onSearch={(value)=> history.push(`/courses/search?key=${value}`)} enterButton />
+                                    <Search placeholder="Search for anything" onSearch={(value)=> this.handleSearch(value)} enterButton />
                                 </Col>
                             </Row>
                         }
@@ -207,9 +211,9 @@ class Navbar extends Component {
                                     <Popover content={content} title="Cart">
                                         <Button ><Badge count={carts.length}><Icon style={{ fontSize: '20px' }} type="shopping-cart" /></Badge></Button>
                                     </Popover>,
-                                <Button style={{ marginRight: '10px', marginLeft: '20px' }} type="primary" shape="round" icon="user" size="large" onClick={this.onClickLogin}>
-                                        Login
-                                </Button>
+                                    <Button style={{ marginRight: '10px', marginLeft: '20px' }} type="primary" shape="round" icon="user" size="large" onClick={this.onClickLogin}>
+                                            Login
+                                    </Button>
                                     <Button type="danger" shape="round" icon="user-add" size="large" onClick={this.onClickSignUp}>
                                         Sign Up
                                 </Button>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
+import axios from 'axios'
 import { Button, Carousel, Row, Col } from 'antd';
 import './style.css';
 import LearnSkill from '../../static/images/LearnSkill.png';
@@ -17,10 +18,12 @@ class HomePage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            hotCategories: []
+            hotCategories: [],
+            hotCourses: [],
+            newCourses: []
         };
     }
-    componentDidMount = () => {
+    componentDidMount = async () => {
         this.props.dispatch(courseActions.getMostViewCourses());
         this.props.dispatch(courseActions.getStudentWishList());
         const requestOptions = {
@@ -37,6 +40,26 @@ class HomePage extends Component {
                     hotCategories: res.data.rows
                 })
             });
+        const res = await axios.post(`${API_URL}/api/courses`, {
+            type: 'enroll'
+            }, {
+            headers: {
+            "x-access-token": localStorage.getItem('token'),
+            "x-refresh-token": localStorage.getItem('ref_token')
+        }})
+
+        const resNewCourses = await axios.post(`${API_URL}/api/courses`, {
+            type: 'ẻnoll'
+            }, {
+            headers: {
+            "x-access-token": localStorage.getItem('token'),
+            "x-refresh-token": localStorage.getItem('ref_token')
+        }})
+        this.setState({
+            hotCourses: res.data.data.array,
+            newCourses: resNewCourses.data.data.array
+        })
+
     }
     handleResponse(response) {
         return response.text().then((text) => {
@@ -109,14 +132,14 @@ class HomePage extends Component {
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={Certificate} />
                                 <span className="goal">Earn a certificate</span>
-                                <small>From a leading university in business, computer science, and more</small>
+                                <small>From a leading university in business, computer science</small>
                             </div>
                         </Col>
                         <Col md={24} lg={6} className="card-intro">
                             <div className="card-achieve" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className="img-achieve" src={Organization} />
-                                <span className="goal">Upskill your organization</span>
-                                <small>with on-demand training and development programs</small>
+                                <span className="goal">Upskill organization</span>
+                                <small>With on-demand training and development programs</small>
                             </div>
                         </Col>
                     </Row>
@@ -153,7 +176,7 @@ class HomePage extends Component {
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>New Courses</h2>
                     <Row style={{ paddingBottom: '40px'}}>
-                        <NewCourses/>
+                        <NewCourses courses={this.state.newCourses}/>
                     </Row>
                     </Col>
                 </Row>
@@ -161,7 +184,7 @@ class HomePage extends Component {
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Hot Courses</h2>
                     <Row style={{ paddingBottom: '100px'}}>
-                        <HotCourses/>
+                        <HotCourses courses={this.state.hotCourses}/>
                     </Row>
                     </Col>
                 </Row>

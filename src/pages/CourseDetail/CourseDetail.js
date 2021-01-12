@@ -182,8 +182,11 @@ class CourseDetail extends Component {
         ];
         const content = (
             <div className="content">
-                <Row type="flex" style={{ alignItems: 'center' }}>
-                    <Rate value={rateFormater(course.rate) || 0} character={<Icon type="heart" />} allowHalf disabled /> <p style={{ marginLeft: '15px' }}>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
+                <Row type="flex" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                        <Rate value={rateFormater(course.rate) || 0} character={<Icon type="heart" />} allowHalf disabled /> <p>({_.get(course, 'feedback_count')} rangtings) {course.enroll_count} students</p>
+                    </div>
+                    <p><b>Last Modified:</b> {moment(course.updatedAt).fromNow()}</p>
                 </Row>
                 <Paragraph>
                     {course.short_description}
@@ -211,10 +214,10 @@ class CourseDetail extends Component {
                     <Button type="danger" ghost style={{ marginRight: '20px' }} onClick={() => this.handleAddToCart(course)}>
                         <Icon type="shopping-cart" /> Add to Cart
                     </Button>
-                    <Button type="primary" ghost>
+                    <Button type="primary" ghost style={{ marginRight: '20px'}}>
                         <Icon type="heart" /> Add to Wishlist
                     </Button>
-                    <FacebookShareButton quote={course.name}>
+                    <FacebookShareButton quote={course.name} style={{ marginTop: '3px'}}>
                         <FacebookIcon size={32} round={true} />
                     </FacebookShareButton>
                 </Row>

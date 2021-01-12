@@ -15,7 +15,8 @@ const initialState = {
         ],
         mostViewCourses: [
 
-        ]
+        ],
+        searchKeyword: ''
     }
 };
 
@@ -60,6 +61,11 @@ export function studentCourse(state = initialState, action) {
             return {
                 ...state,
                 data: { ...state.data, wishlists: state.data.wishlists.filter(item => item.course_id !== courseId) }
+            }
+        case "saveSearchKeyword":
+            return {
+                ...state,
+                data: { ...state.data, searchKeyword: action.data}
             }
         default:
             return state;

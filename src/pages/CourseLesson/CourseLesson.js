@@ -82,6 +82,7 @@ class CourseLesson extends Component {
 
     handlePlayLesson = (chapter) => {
         this.setState({
+            seek: 0,
             currentChapter: chapter
         })
     } 

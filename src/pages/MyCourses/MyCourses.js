@@ -3,22 +3,36 @@ import React, { Component } from 'react'
 import './style.css';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { courseActions } from '../../actions/courseActions';
 import CourseCard from '../../components/CourseCard';
 import { withRouter } from "react-router";
+import {config} from '../../_constants/api';
+const {API_URL} = config;
 
 
 class MyCourses extends Component {
     state = {
-
+        courses: []
     };
 
-    componentDidMount = () => {
-        this.props.dispatch(courseActions.getStudentCourses(this.props.user.id))
+    componentDidMount = async () => {
+        //this.props.dispatch(courseActions.getStudentCourses(this.props.user.id))
+        const res = await axios.post(`${API_URL}/api/courses`, {
+            type: 'student',
+            value: this.props.user.id
+        }, {
+            headers: {
+          "x-access-token": localStorage.getItem('token'),
+          "x-refresh-token": localStorage.getItem('ref_token')
+      }})
+      this.setState({
+          courses: res.data.data.array
+      })
     }
 
     render() {
-        const {courses} = this.props;
+        const {courses} = this.state;
         console.log("===========this.props.match======", this.props.match)
         return (
             <>

@@ -60,7 +60,8 @@ class Account extends React.Component {
         const { dispatch } = this.props;
         const user = {
            old_password,
-           new_password
+           new_password,
+           email: this.props.email
         }
         dispatch(userActions.updateUserPassword(user));
     };
@@ -249,22 +250,6 @@ class Account extends React.Component {
                         <Divider></Divider>
                     </div>
                 </Row>
-                <Row type="flex" justify="center">
-                    <Col span={22} style={{ margin: '0 auto' }}>
-                        <h2 style={{ fontSize: '32px', color: '#3c3b37', fontWeight: '800' }}>My Watch List</h2>
-                        <Row style={{ paddingBottom: '100px' }}>
-                            <HotCourses />
-                        </Row>
-                    </Col>
-                </Row>
-                <Row type="flex" justify="center">
-                    <Col span={22} style={{ margin: '0 auto' }}>
-                        <h2 style={{ fontSize: '32px', color: '#3c3b37', fontWeight: '800' }}>Courses I have taken</h2>
-                        <Row style={{ paddingBottom: '100px' }}>
-                            <HotCourses />
-                        </Row>
-                    </Col>
-                </Row>
             </div>
         );
     }
@@ -275,6 +260,7 @@ const mapStateToProps = state => ({
     currentCourse: state.teacherCourse.data.currentCourse,
     alert: state.alert,
     username: state.authentication.user.name,
+    email: state.authentication.user.email,
     avatar: state.authentication.user.avatar_url,
     role: state.userProfile.data.role,
     accessToken: state.authentication.user.accessToken,

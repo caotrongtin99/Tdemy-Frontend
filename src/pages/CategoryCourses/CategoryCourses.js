@@ -32,7 +32,6 @@ class CategoryCourses extends Component {
           return fetch(`${API_URL}/api/courses?limit=8&offset=0`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
-                debugger
               this.setState({
                   courseList: res.data.array,
                   total: res.data.count
@@ -57,7 +56,6 @@ class CategoryCourses extends Component {
       }
 
     handleChangePage = (page) => {
-        debugger
         this.setState({
             page: page
         }, () => {
