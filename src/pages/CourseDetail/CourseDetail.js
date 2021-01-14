@@ -1,4 +1,4 @@
-import { List, Col, Row, Button, Icon, Typography, PageHeader, notification, Skeleton, Avatar, Comment, Form, Input, Rate } from 'antd'
+import { List, Col, Row, Button, Icon, Typography, PageHeader, notification, Skeleton, Avatar, Comment, Form, Input, Rate, Image } from 'antd'
 import React, { Component } from 'react'
 import 'rc-rate/assets/index.css';
 import Parser from 'html-react-parser';
@@ -289,8 +289,15 @@ class CourseDetail extends Component {
                                     {Parser(course.description || '<p></p>')}
                                 </div>
                             </div>
-                            <div className="feedbacks">
-
+                            <div className='description' style={{ color: 'black', fontSize: '14px', margin: '30px 0' }}>
+                                <h2 style={{ fontSize: '25px', fontWeight: 'bold' }}>Instructor</h2>
+                                <Row>
+                                    <Col span={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                        <Avatar src={course.teacher.avatar_url} size={150} />
+                                        <b style={{ marginTop: '20px'}}>{course.teacher.name}</b>
+                                        <p>Number of Coures: { course.teacher.course_count} courses</p>
+                                    </Col>
+                                </Row>
                             </div>
                             <div className="feedbacks">
                                 <h2 style={{ fontSize: '25px', fontWeight: 'bold' }}>Feedbacks</h2>

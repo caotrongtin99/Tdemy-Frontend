@@ -84,7 +84,7 @@ class CourseCard extends Component {
     }
 
     render() {
-        const { course, isBestSeller, match} = this.props;
+        const { course, isBestSeller, isNew, match} = this.props;
         const isMyCoursesPage = _.get(match, 'path') === "/course/my-courses";
         const isWishlistPage = _.get(match, 'path') === "/course/my-wishlist";
         const content = (
@@ -93,6 +93,7 @@ class CourseCard extends Component {
                 {course.category[0].map(category => <Tag style={{ marginRight: '10px'}} color={this.ramdomColor()}>{category}</Tag>)}
                 <div style={{ marginTop: '15px'}}>
                 <p>{course.short_description}</p>
+                {isMyCoursesPage && <Button onClick={()=> history.push(history.push(`/course/${course.id}`))}>View Detail</Button>}
                 </div>
                 {!isMyCoursesPage && <Row type="flex" style={{ alignItems: "center" }}>
                     <Button type="danger" danger onClick={() => this.addToCard(course)}>
@@ -113,14 +114,14 @@ class CourseCard extends Component {
                             // onClick={this.handleViewDetail(course)}
                             cover={<img alt="example" style={{width: '298px', height: '200px'}} src={course.avatar_url} />}
                         >
-                            <h4>{course.name}</h4>{isBestSeller &&  <Tag color="red">Best Seller</Tag>}
+                            <h4>{course.name}</h4>{isBestSeller && <Tag color="red">Best Seller</Tag>}{isNew && <Tag color="orange">New Course</Tag>}
                             <i>{course.owner_name}</i>
                             <div>
                             <b>$ {course.fee}</b>
                             </div>
                             <Rate
                                 count={5}
-                                value={rateFormater(course.rate) || 4}
+                                value={rateFormater(course.rate) || 0}
                                 allowHalf={true}
                                 disabled
                             />,

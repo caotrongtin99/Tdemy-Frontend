@@ -6,7 +6,8 @@ import queryString from 'query-string';
 import {history} from '../../_helpers/history';
 import '../Register/style.css';
 import {config} from '../../_constants/api';
-const {API_URL} = config;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 class NewPassword extends React.Component {
     state = {
         confirmDirty: false,
@@ -30,7 +31,7 @@ class NewPassword extends React.Component {
                 },
                 body: JSON.stringify({ password : password }),
                 };
-              return fetch(`${API_URL}/api/auth/confirm?code=${code}`, requestOptions)
+              return fetch(`${REACT_APP_API_URL}/api/auth/confirm?code=${code}`, requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   if (res.result === 0) {

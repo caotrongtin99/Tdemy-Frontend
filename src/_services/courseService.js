@@ -1,7 +1,8 @@
 import {config} from '../_constants/api';
 import axios from 'axios'
 import { notification } from 'antd';
-const {API_URL} = config;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 export const courseService = {
     createCourse,
     updateCourse,
@@ -29,7 +30,7 @@ function createSession(session) {
     body: JSON.stringify(session),
   };
 
-  return fetch(`${API_URL}/api/session/${session.chapterId}`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/session/${session.chapterId}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       
@@ -46,7 +47,7 @@ function createCourse(course) {
     body: JSON.stringify(course),
   };
 
-  return fetch(`${API_URL}/api/courses/new`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/new`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       
@@ -66,7 +67,7 @@ function updateCourse(course) {
     body: JSON.stringify(course),
   };
 
-  return fetch(`${API_URL}/api/courses/${id}`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/${id}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;
@@ -84,7 +85,7 @@ function deleteCourse(course) {
      }
   };
 
-  return fetch(`${API_URL}/api/courses/${id}`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/${id}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.result;
@@ -101,7 +102,7 @@ function removeItemInWishlist(course_id) {
     body: JSON.stringify({course_id: course_id})
   };
 
-  return fetch(`${API_URL}/api/wishlist`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/wishlist`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.result;
@@ -116,7 +117,7 @@ function getCourseDetail(id) {
     "x-refresh-token": localStorage.getItem('ref_token')
     },
     };
-  return fetch(`${API_URL}/api/courses/${id}`,requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/${id}`,requestOptions)
     .then(handleResponse)
     .then((res) => {
       console.log("=========res from service =============", res);
@@ -125,7 +126,7 @@ function getCourseDetail(id) {
 }
 
 async function getTeacherCourses(id) {
-    const res = await axios.post(`${API_URL}/api/courses`, {
+    const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
           type: 'teacher',
           value: id
       }, {
@@ -137,7 +138,7 @@ async function getTeacherCourses(id) {
 }
 
 async function getStudentCourses(id) {
-  const res = await axios.post(`${API_URL}/api/courses`, {
+  const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
         type: 'student',
         value: id
     }, {
@@ -149,7 +150,7 @@ async function getStudentCourses(id) {
 }
 
 async function getMostViewCourses() {
-  const res = await axios.post(`${API_URL}/api/courses`, {
+  const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
         type: 'view'
       }, {
         headers: {
@@ -160,7 +161,7 @@ async function getMostViewCourses() {
 }
 
 async function createChapter(chapter) {
-    const res = await axios.post(`${API_URL}/api/courses/${chapter.courseId}/chapters`, {
+    const res = await axios.post(`${REACT_APP_API_URL}/api/courses/${chapter.courseId}/chapters`, {
         title: chapter.title,
         video_url: chapter.video_url,
         status: 0,
@@ -191,7 +192,7 @@ function updateChapter(chapter) {
     body: JSON.stringify(chapter),
   };
 
-  return fetch(`${API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;
@@ -207,7 +208,7 @@ function deleteChapter(id, courseId) {
      }
   };
 
-  return fetch(`${API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/courses/${courseId}/chapters/${id}`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.result;
@@ -224,7 +225,7 @@ function createEnroll(courseIds) {
     body: JSON.stringify(data),
   };
 
-  return fetch(`${API_URL}/api/enroll`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/enroll`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       if (res.result === 0){
@@ -245,7 +246,7 @@ function addToWishList(courseId) {
     body: JSON.stringify(data),
   };
 
-  return fetch(`${API_URL}/api/wishlist`, requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/wishlist`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       if (res.result === 0){
@@ -264,7 +265,7 @@ function getStudentWishList(id) {
     "x-refresh-token": localStorage.getItem('ref_token')
     },
     };
-  return fetch(`${API_URL}/api/wishlist/`,requestOptions)
+  return fetch(`${REACT_APP_API_URL}/api/wishlist/`,requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data.array;

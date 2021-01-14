@@ -105,12 +105,14 @@ function login(email, password, accessToken, refreshToken) {
     
     userService.login(email, password).then(
       (data) => {
+        debugger
         if (!data){
           notification.error({
             message: 'Login Fail!'
           })
         } else {
           dispatch(userActions.saveUserData(data))
+          debugger
           localStorage.setItem("token", data.accessToken);
           localStorage.setItem("ref_token", data.ref_token);
           dispatch(success(data))
@@ -195,7 +197,7 @@ function getUserData(queryParams) {
 }
 
 function saveUserData(user) {
-  
+  debugger
   return (dispatch) => {
     dispatch({ type: 'saveUserData', user})
   }
@@ -203,17 +205,18 @@ function saveUserData(user) {
 
 function updateUserPassword(user) {
   return (dispatch) => {
-    dispatch(request());
-
+    console.log("===========update user password========", user)
     userService.updateUserPassword(user).then(
       (data) => {
+        debugger
+        console.log("============data===========", data)
         if(data.result !== 0) {
           notification.error({
             message: 'Update password Notification!',
             description: 'Update User password Failed'
           })
         } else {
-          dispatch({ type: 'updateUserPassword', user})
+          notification.success({ message: 'Success!'})
         }
       },
       (error) => {

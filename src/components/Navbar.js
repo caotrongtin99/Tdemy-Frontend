@@ -9,7 +9,8 @@ import {userActions}  from '../actions/userActions'
 import './Navbar.css';
 import { cartActions } from '../actions/cartActions';
 import {config} from '../_constants/api';
-const {API_URL} = config;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 const { SubMenu } = Menu;
 const { Header } = Layout;
 const { Search } = Input;
@@ -35,7 +36,7 @@ class Navbar extends Component {
             }
         };
 
-        fetch(`${API_URL}/api/category/tree`, requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
             .then(async (res) => {
                 const data = await this.handleResponse(res);
                 const categoryList = data.data.rows;
@@ -115,6 +116,11 @@ class Navbar extends Component {
         history.push('/account')
     }
 
+    handleClickCategory = (category) => {
+        this.props.dispatch({ type: 'saveCategoryParams', data: category})
+        history.push(`/category/${category}`)
+    }
+
     handleLogout = () => {
         this.props.dispatch(userActions.logout());
         this.props.dispatch(cartActions.clearCart());
@@ -180,11 +186,11 @@ class Navbar extends Component {
                                         } key="sub2" title={<b><Icon type="appstore" />Categories</b>}>
                                             {this.state.categoryList.map(category => {
                                                 if (category.subCount === 0) {
-                                                    return <Menu.Item onClick={() => history.push(`/category/${category.name}`)} key={category.name}>{category.name}</Menu.Item>
+                                                    return <Menu.Item onClick={() => this.handleClickCategory(category.name)} key={category.name}>{category.name}</Menu.Item>
                                                 }
                                                 return (
-                                                    <SubMenu key={category.name} title={category.name} onTitleClick={() => history.push(`/category/${category.name}`)}>
-                                                        {category.subCat.map(subCategory=> <Menu.Item onClick={() => history.push(`/category/${subCategory.name}`)} key={subCategory.name}>{subCategory.name}</Menu.Item>)}
+                                                    <SubMenu key={category.name} title={category.name} onTitleClick={() => this.handleClickCategory(category.name)}>
+                                                        {category.subCat.map(subCategory=> <Menu.Item onClick={() => this.handleClickCategory(subCategory.name)} key={subCategory.name}>{subCategory.name}</Menu.Item>)}
                                                     </SubMenu>
                                                 )
                                             })}

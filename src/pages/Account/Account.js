@@ -10,7 +10,9 @@ import { connect } from 'react-redux';
 import { userActions } from '../../actions/userActions';
 
 import upload from '../../utils/imageUploader';
-
+import {config} from '../../_constants/api';
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -39,7 +41,7 @@ class Account extends React.Component {
     };
 
     componentWillMount() {
-        this.state.username = this.props.username;
+        // this.state.username = this.props.username;
         this.state.avatar = this.props.avatar;
     }
 
@@ -64,7 +66,42 @@ class Account extends React.Component {
            email: this.props.email
         }
         dispatch(userActions.updateUserPassword(user));
+        const accessToken = "abc";
+        const refreshToken =" abc";
+        setTimeout(()=>{
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: this.props.email, password: new_password, accessToken, refreshToken }),
+              };
+            
+              return fetch(`${REACT_APP_API_URL}/api/auth`, requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                  if (res.result === 0){
+                    localStorage.setItem("token", res.data.accessToken);
+                    localStorage.setItem("ref_token", res.data.ref_token);
+                  }
+                });
+        }, 3000)
+        // dispatch(userActions.login(this.props.email, new_password, accessToken, refreshToken));
     };
+
+    handleResponse = (response) => {
+        return response.text().then((text) => {
+          const data = text && JSON.parse(text);
+          if (!response.ok) {
+            if (response.status === 401) {
+              window.location.reload(true);
+            }
+      
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+          }
+      
+          return data;
+        });
+    }
 
     handleUploadImage = async (file) => {
         // const image = imageToBase64(file);
@@ -259,7 +296,7 @@ const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
     currentCourse: state.teacherCourse.data.currentCourse,
     alert: state.alert,
-    username: state.authentication.user.name,
+    // username: state.authentication.user.name,
     email: state.authentication.user.email,
     avatar: state.authentication.user.avatar_url,
     role: state.userProfile.data.role,

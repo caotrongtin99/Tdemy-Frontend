@@ -16,7 +16,8 @@ const initialState = {
         mostViewCourses: [
 
         ],
-        searchKeyword: ''
+        searchKeyword: '',
+        category: ''
     }
 };
 
@@ -66,6 +67,11 @@ export function studentCourse(state = initialState, action) {
             return {
                 ...state,
                 data: { ...state.data, searchKeyword: action.data}
+            }
+        case "saveCategoryParams":
+            return {
+                ...state,
+                data: { ...state.data, category: action.data}
             }
         default:
             return state;

@@ -13,7 +13,8 @@ import MostViewCourses from '../../components/MostViewCourses';
 import NewCourses from '../../components/NewCourses';
 import {config} from '../../_constants/api';
 import { history } from '../../_helpers/history';
-const {API_URL} = config;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 class HomePage extends Component {
     constructor(props){
         super(props);
@@ -24,6 +25,8 @@ class HomePage extends Component {
         };
     }
     componentDidMount = async () => {
+        console.log({REACT_APP_API_URL})
+        console.log("==================", process.env)
         this.props.dispatch(courseActions.getMostViewCourses());
         this.props.dispatch(courseActions.getStudentWishList());
         const requestOptions = {
@@ -33,14 +36,15 @@ class HomePage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-        fetch(`${API_URL}/api/category`,requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/category`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
+                const categories = res.data.rows.slice(0,5);
                 this.setState({
-                    hotCategories: res.data.rows
+                    hotCategories: categories
                 })
             });
-        const res = await axios.post(`${API_URL}/api/courses`, {
+        const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
             type: 'enroll'
             }, {
             headers: {
@@ -48,7 +52,7 @@ class HomePage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
         }})
 
-        const resNewCourses = await axios.post(`${API_URL}/api/courses`, {
+        const resNewCourses = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
             type: 'ẻnoll'
             }, {
             headers: {
@@ -77,7 +81,6 @@ class HomePage extends Component {
         });
       }
     render() {
-        console.log(this.state.hotCategories)
         return (
             <div className='homepage'>
                 <Carousel autoplay>
@@ -156,8 +159,8 @@ class HomePage extends Component {
                     <Col span={22} style={{ margin: '0 auto'}}>
                     <h2 style={{ fontFamily: 'sans-serif', fontSize: '32px', color: '#3c3b37', fontWeight:'800'}}>Featured Categories</h2>
                     <Row style={{ paddingBottom: '40px'}} gutter={30}>
-                        {this.state.hotCategories.map(category => <Col span={6} >
-                            <div onClick={()=> history.push(`/category/${category.name}`)} className="category-card" style={{border: '1px solid #dcdacb', borderRadius: '4px', color: '#0f7c90', padding: '18px 0', margin: '5px 5px', display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+                        {this.state.hotCategories.map(category => <Col span={4} >
+                            <div onClick={()=> {this.props.dispatch({ type: 'saveCategoryParams', data: category.name}); history.push(`/category/${category.name}`); }} className="category-card" style={{border: '1px solid #dcdacb', borderRadius: '4px', color: '#0f7c90', padding: '18px 0', margin: '5px 5px', display: 'flex', justifyContent: 'center', alignItems:'center'}}>
                                 <p style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '14px'}}>{category.name}</p>
                             </div>
                         </Col>)}

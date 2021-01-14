@@ -6,7 +6,9 @@ import _, { constant } from 'lodash';
 import { connect } from 'react-redux';
 import {config} from '../../_constants/api';
 import CourseCard from '../../components/CourseCard';
-const {API_URL} = config;
+import moment from 'moment';
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 const { Option } = Select;
 
 class SearchPage extends Component {
@@ -22,7 +24,7 @@ class SearchPage extends Component {
         };
     }
     componentDidMount = () => {
-        debugger
+
         const {match, location} = this.props;
         let params = queryString.parse(location.search)
         const {searchKeyword, fee} = this.props;
@@ -34,7 +36,7 @@ class SearchPage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-          return fetch(`${API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+          return fetch(`${REACT_APP_API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -42,6 +44,27 @@ class SearchPage extends Component {
                   total: res.data.totalCount
               })
             });
+    }
+
+    componentDidUpdate = (prevProps, prevState, snap) => {
+        const {searchKeyword} = this.props;
+        if (searchKeyword !== prevProps.searchKeyword) {
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                };
+              return fetch(`${REACT_APP_API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                  this.setState({
+                      courseList: res.data.array,
+                      total: res.data.totalCount
+                  })
+                });
+        }
     }
 
     handleResponse(response) {
@@ -74,7 +97,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -96,7 +119,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -120,7 +143,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -150,10 +173,9 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
-                    console.log("=============res===============", res.data.array)
                     this.setState({
                         courseList: res.data.array,
                         total: res.data.totalCount
@@ -163,9 +185,21 @@ class SearchPage extends Component {
     }
 
     render() {
-        const {match, location} = this.props;
         const {courseList} = this.state;
-        let params = queryString.parse(location.search)
+        let formattedCourses = [];
+        courseList.forEach(course => {
+            const daysAgo = moment(course.createdAt).diff(new Date(), 'd');
+            if (daysAgo > -10) {
+                Object.assign(course, {isNew: true})
+            }
+            debugger
+            if (course.enroll_count - 0 > 0) {
+                debugger
+                Object.assign(course, {isBestSeller: true})
+            }
+            formattedCourses.push(course);
+        })
+        
         const { searchKeyword: key} = this.props;
         return (
             <>
@@ -187,7 +221,7 @@ class SearchPage extends Component {
                         </Row>
                         <Row gutter={40}>
                         {
-                            courseList.map(course => <Col className="gutter-row" md={6} sm={24} ><CourseCard course={course} /></Col>)
+                            formattedCourses.map(course => <Col className="gutter-row" md={6} sm={24} ><CourseCard course={course} isNew={course.isNew} isBestSeller={course.isBestSeller} /></Col>)
                         }
                         </Row>
                         <Row type="flex" justify="center" style={{ marginBottom: '20px'}}>

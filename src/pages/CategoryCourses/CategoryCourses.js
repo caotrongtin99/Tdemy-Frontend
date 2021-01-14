@@ -6,30 +6,27 @@ import _, { constant } from 'lodash';
 import { connect } from 'react-redux';
 import {config} from '../../_constants/api';
 import CourseCard from '../../components/CourseCard';
-const {API_URL} = config;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 const { Option } = Select;
 
 class CategoryCourses extends Component {
     state = {
         courseList: [],
-        category: '',
         page: 1,
         total: 0
     };
     componentDidMount = () => {
-        const {match, location} = this.props;
-        this.setState({
-            category: match.params.category
-        })
+        const {match, category} = this.props;
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json",
             "x-access-token": localStorage.getItem('token'),
             "x-refresh-token": localStorage.getItem('ref_token')
             },
-            body: JSON.stringify({ type: 'category', value: match.params.category}),
+            body: JSON.stringify({ type: 'category', value: category}),
             };
-          return fetch(`${API_URL}/api/courses?limit=8&offset=0`, requestOptions)
+          return fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=0`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -37,6 +34,29 @@ class CategoryCourses extends Component {
                   total: res.data.count
               })
             });
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        const {category} = this.props;
+        debugger
+        if (category !== prevProps.category) {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
+                },
+                body: JSON.stringify({ type: 'category', value: category}),
+                };
+            return fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=0`, requestOptions)
+                .then(this.handleResponse)
+                .then((res) => {
+                this.setState({
+                    courseList: res.data.array,
+                    total: res.data.count
+                })
+                });
+            }
     }
 
     handleResponse(response) {
@@ -59,18 +79,16 @@ class CategoryCourses extends Component {
         this.setState({
             page: page
         }, () => {
-            console.log("==== page===", this.state.page)
-            const {match, location} = this.props;
+            const { category} = this.props;
             const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json",
-            "x-access-token": localStorage.getItem('token'),
-            "x-refresh-token": localStorage.getItem('ref_token')
+                "x-access-token": localStorage.getItem('token'),
+                "x-refresh-token": localStorage.getItem('ref_token')
             },
-            body: JSON.stringify({ type: 'category', value: match.params.category}),
+            body: JSON.stringify({ type: 'category', value: category}),
             };
-            debugger
-            fetch(`${API_URL}/api/courses?limit=8&offset=${(this.state.page - 1)*8}`, requestOptions)
+            fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=${(this.state.page - 1)*8}`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -81,7 +99,8 @@ class CategoryCourses extends Component {
     }
 
     render() {
-        const {courseList, category} = this.state;
+        const {courseList} = this.state;
+        const { category } = this.props;
         const listCoursesRender = courseList.map(course => <Col md={6} sm={24}><CourseCard course={course} /></Col>)
         return (
             <>
@@ -112,6 +131,7 @@ class CategoryCourses extends Component {
 const mapStateToProps = state => ({
     loggedIn: state.authentication.loggedIn,
     course: state.teacherCourse.data.currentCourse,
+    category: state.studentCourse.data.category,
     cartItems: state.cart.carts
 })
 
