@@ -16,6 +16,7 @@
     "axios": "^0.18.1",
     "cloudinary": "^1.23.0",
     "create-react-app": "^4.0.1",
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
