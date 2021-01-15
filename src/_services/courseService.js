@@ -2,6 +2,7 @@ import {config} from '../_constants/api';
 import axios from 'axios'
 import { notification } from 'antd';
 require('dotenv').config()
+const {API_URL} = config;
 const {REACT_APP_API_URL} = process.env;
 export const courseService = {
     createCourse,
