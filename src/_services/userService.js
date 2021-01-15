@@ -1,7 +1,7 @@
 import { notification } from 'antd';
 import {config} from '../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 
 export const userService = {
   login,
@@ -24,7 +24,7 @@ function updateUserPassword(user) {
     },
     body: JSON.stringify(user),
   }
-  return fetch(`${REACT_APP_API_URL}/api/users/changepassword`, requestOptions)
+  return fetch(`${API_URL}/api/users/changepassword`, requestOptions)
     .then(handleResponse)
     .then(res => {
       return res;
@@ -42,7 +42,7 @@ function updateUser(user, id) {
     body: JSON.stringify(user),
   }
 
-  return fetch(`${REACT_APP_API_URL}/api/users/${id}`, requestOptions)
+  return fetch(`${API_URL}/api/users/${id}`, requestOptions)
     .then(handleResponse)
     .then(res => {
       return res;
@@ -57,7 +57,7 @@ function login(email, password, accessToken, refreshToken) {
     body: JSON.stringify({ email, password, accessToken, refreshToken }),
   };
 
-  return fetch(`${REACT_APP_API_URL}/api/auth`, requestOptions)
+  return fetch(`${API_URL}/api/auth`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       if (res.result === 0){
@@ -99,7 +99,7 @@ function register(user) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   };
-  return fetch(`${REACT_APP_API_URL}/api/users/`, requestOptions).then(handleResponse);
+  return fetch(`${API_URL}/api/users/`, requestOptions).then(handleResponse);
 }
 
 function createComment(feedback) {
@@ -115,7 +115,7 @@ function createComment(feedback) {
     body: JSON.stringify(feedback),
   };
 
-  return fetch(`${REACT_APP_API_URL}/api/courses/${id}/feedback`, requestOptions)
+  return fetch(`${API_URL}/api/courses/${id}/feedback`, requestOptions)
     .then(handleResponse)
     .then((res) => {
       return res.data;

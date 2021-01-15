@@ -6,7 +6,7 @@ import { history } from '../../_helpers/history';
 import { Steps } from 'antd';
 import {config} from '../../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 const { Step } = Steps;
 const { Option } = Select;
 
@@ -32,7 +32,7 @@ class CreateCourse extends Component {
             }
         };
 
-        fetch(`${REACT_APP_API_URL}/api/category`, requestOptions)
+        fetch(`${API_URL}/api/category`, requestOptions)
             .then(async (res) => {
                 const data = await this.handleResponse(res);
                 const categoryList = data.data.rows;

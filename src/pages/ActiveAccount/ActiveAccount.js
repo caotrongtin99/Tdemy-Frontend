@@ -6,7 +6,7 @@ import { history } from '../../_helpers/history';
 import queryString from 'query-string';
 import {config} from '../../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 
 class ActiveAccount extends React.Component {
     state = {
@@ -22,7 +22,7 @@ class ActiveAccount extends React.Component {
             headers: { "Content-Type": "application/json"
             }
             };
-          return fetch(`${REACT_APP_API_URL}/api/auth/confirm?code=${code}`, requestOptions)
+          return fetch(`${API_URL}/api/auth/confirm?code=${code}`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
                 debugger

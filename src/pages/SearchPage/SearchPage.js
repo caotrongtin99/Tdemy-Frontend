@@ -8,7 +8,7 @@ import {config} from '../../_constants/api';
 import CourseCard from '../../components/CourseCard';
 import moment from 'moment';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 const { Option } = Select;
 
 class SearchPage extends Component {
@@ -36,7 +36,7 @@ class SearchPage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-          return fetch(`${REACT_APP_API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+          return fetch(`${API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -56,7 +56,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${REACT_APP_API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${API_URL}/api/search?key=${searchKeyword}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -97,7 +97,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -119,7 +119,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -143,7 +143,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   this.setState({
@@ -173,7 +173,7 @@ class SearchPage extends Component {
                 "x-refresh-token": localStorage.getItem('ref_token')
                 },
                 };
-              return fetch(`${REACT_APP_API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
+              return fetch(`${API_URL}/api/search?key=${key}&limit=8&offset=${(this.state.page - 1) * 8}&rating=${this.state.sortByRating}&fee=${this.state.sortByPrice}`,requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                     this.setState({

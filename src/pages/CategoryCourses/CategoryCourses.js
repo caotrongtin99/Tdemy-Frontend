@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {config} from '../../_constants/api';
 import CourseCard from '../../components/CourseCard';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 const { Option } = Select;
 
 class CategoryCourses extends Component {
@@ -26,7 +26,7 @@ class CategoryCourses extends Component {
             },
             body: JSON.stringify({ type: 'category', value: category}),
             };
-          return fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=0`, requestOptions)
+          return fetch(`${API_URL}/api/courses?limit=8&offset=0`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({
@@ -48,7 +48,7 @@ class CategoryCourses extends Component {
                 },
                 body: JSON.stringify({ type: 'category', value: category}),
                 };
-            return fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=0`, requestOptions)
+            return fetch(`${API_URL}/api/courses?limit=8&offset=0`, requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                 this.setState({
@@ -88,7 +88,7 @@ class CategoryCourses extends Component {
             },
             body: JSON.stringify({ type: 'category', value: category}),
             };
-            fetch(`${REACT_APP_API_URL}/api/courses?limit=8&offset=${(this.state.page - 1)*8}`, requestOptions)
+            fetch(`${API_URL}/api/courses?limit=8&offset=${(this.state.page - 1)*8}`, requestOptions)
             .then(this.handleResponse)
             .then((res) => {
               this.setState({

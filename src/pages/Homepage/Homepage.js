@@ -14,7 +14,7 @@ import NewCourses from '../../components/NewCourses';
 import {config} from '../../_constants/api';
 import { history } from '../../_helpers/history';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 class HomePage extends Component {
     constructor(props){
         super(props);
@@ -25,7 +25,7 @@ class HomePage extends Component {
         };
     }
     componentDidMount = async () => {
-        console.log({REACT_APP_API_URL})
+        console.log({API_URL})
         console.log("==================", process.env)
         this.props.dispatch(courseActions.getMostViewCourses());
         this.props.dispatch(courseActions.getStudentWishList());
@@ -36,7 +36,7 @@ class HomePage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
             },
             };
-        fetch(`${REACT_APP_API_URL}/api/category`,requestOptions)
+        fetch(`${API_URL}/api/category`,requestOptions)
             .then(this.handleResponse)
             .then((res) => {
                 const categories = res.data.rows.slice(0,5);
@@ -44,7 +44,7 @@ class HomePage extends Component {
                     hotCategories: categories
                 })
             });
-        const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
+        const res = await axios.post(`${API_URL}/api/courses`, {
             type: 'enroll'
             }, {
             headers: {
@@ -52,7 +52,7 @@ class HomePage extends Component {
             "x-refresh-token": localStorage.getItem('ref_token')
         }})
 
-        const resNewCourses = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
+        const resNewCourses = await axios.post(`${API_URL}/api/courses`, {
             type: 'ẻnoll'
             }, {
             headers: {

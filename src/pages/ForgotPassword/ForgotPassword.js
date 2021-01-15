@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import '../Register/style.css';
 import {config} from '../../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 class ForgotPassword extends React.Component {
     state = {
         notice: '',
@@ -24,7 +24,7 @@ class ForgotPassword extends React.Component {
                 },
                 body: JSON.stringify({ email : email }),
                 };
-              return fetch(`${REACT_APP_API_URL}/api/auth/forgot`, requestOptions)
+              return fetch(`${API_URL}/api/auth/forgot`, requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   console.log({res})

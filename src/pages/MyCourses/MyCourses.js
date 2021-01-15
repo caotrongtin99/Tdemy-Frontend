@@ -9,7 +9,7 @@ import CourseCard from '../../components/CourseCard';
 import { withRouter } from "react-router";
 import {config} from '../../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config;
 
 
 class MyCourses extends Component {
@@ -19,7 +19,7 @@ class MyCourses extends Component {
 
     componentDidMount = async () => {
         //this.props.dispatch(courseActions.getStudentCourses(this.props.user.id))
-        const res = await axios.post(`${REACT_APP_API_URL}/api/courses`, {
+        const res = await axios.post(`${API_URL}/api/courses`, {
             type: 'student',
             value: this.props.user.id
         }, {

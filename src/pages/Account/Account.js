@@ -12,7 +12,7 @@ import { userActions } from '../../actions/userActions';
 import upload from '../../utils/imageUploader';
 import {config} from '../../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = process.env;
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -75,7 +75,7 @@ class Account extends React.Component {
                 body: JSON.stringify({ email: this.props.email, password: new_password, accessToken, refreshToken }),
               };
             
-              return fetch(`${REACT_APP_API_URL}/api/auth`, requestOptions)
+              return fetch(`${API_URL}/api/auth`, requestOptions)
                 .then(this.handleResponse)
                 .then((res) => {
                   if (res.result === 0){

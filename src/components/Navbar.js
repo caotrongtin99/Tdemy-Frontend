@@ -10,7 +10,7 @@ import './Navbar.css';
 import { cartActions } from '../actions/cartActions';
 import {config} from '../_constants/api';
 require('dotenv').config()
-const {REACT_APP_API_URL} = process.env;
+const {API_URL} = config
 const { SubMenu } = Menu;
 const { Header } = Layout;
 const { Search } = Input;
@@ -36,7 +36,7 @@ class Navbar extends Component {
             }
         };
 
-        fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
+        fetch(`${API_URL}/api/category/tree`, requestOptions)
             .then(async (res) => {
                 const data = await this.handleResponse(res);
                 const categoryList = data.data.rows;
